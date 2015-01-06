@@ -1,0 +1,144 @@
+<!-- 
+    Apttus Config & Pricing
+    CartHeader
+     
+    @2011-2013 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.CartHeaderController" 
+				access="global"
+				allowDML="true" >	
+    
+    <!--  cart id -->
+    <apex:attribute name="cartId" 
+    				description="Cart ID" 
+    				type="ID" 
+    				required="true"
+    				access="global"
+    				assignTo="{!CartIdProp}" />
+    								
+    <!--  cart request id -->
+    <apex:attribute name="requestId" 
+    				description="Request ID" 
+    				type="ID" 
+    				required="true"
+    				access="global"
+    				assignTo="{!RequestIdProp}" />
+    
+    <!--  cart read only -->
+    <apex:attribute name="readOnly" 
+    				description="Read Only" 
+    				type="BOOLEAN" 
+    				required="false"
+    				assignTo="{!ReadOnlyProp}" />
+    								
+    <style>
+    	.cartTable {
+    		width: 100%; 
+    		background: url('{!$Resource.CPQNewSprites}') repeat-x;
+			background-position: 0px -35px;
+			height:30px;
+    	}
+    	
+    	.metadata{
+    		margin: 0px !important;
+    	 
+    	}
+    </style>
+	
+	<div id="idDummyCurrency" style="display:none;">
+   		<apex:outputField style="display:none;" value="{!dummyLineItem.Apttus_Config2__BaseCost__c}"/>
+   	</div>
+   	<script type="text/javascript">
+   		if(typeof j$.APTTUS !== "undefined"){
+			var dummyCostElement = j$('#idDummyCurrency span');
+			var dummyCost = dummyCostElement.text();
+			//remove multicurrency section
+			if (dummyCost.indexOf("(") != -1) {
+				var multiCurrencySection = dummyCost.substring(dummyCost.indexOf("(")-1,dummyCost.length);
+				dummyCost = dummyCost.replace(multiCurrencySection,"");
+
+			} 
+			//check if empty string
+			if(dummyCost.length < 3){
+				j$.APTTUS.currencyTemplate = '';
+				
+			} else {
+				j$.APTTUS.currencyTemplate = dummyCost;
+				
+				
+			}
+		}
+		
+	</script>  
+					
+ 	<div class="cartTable" style="width:100%; height:30px;">
+ 		<div style="float:left;padding-top:5px; margin: 0 2px;">
+	                         <table width="100%">
+	                             <tr><td width="100%">
+	                             	<div style="height: 100%; vertical-align: middle; display:inline-block">
+		                                <apex:outputText escape="false" 
+		                                 				  value="{!$Label[fromBizType]}:"
+		                                     			  style="text-transform:uppercase;font-weight:bold;color:#5487B9" />
+										&nbsp;
+										<apex:outputField value="{!CartSO[BOLookupFieldName]}" 
+														  rendered="{!ShowBOLookupField}" />
+														  
+										<apex:outputText escape="false"
+														 value="&nbsp;{!fromBizTitle}&nbsp;&nbsp;"
+														 style="font-weight:bold;color:#5487B9;  padding-left:6px;" 
+														 rendered="{!ShowBOTitle}" />
+										
+										&nbsp;
+										<apex:outputField value="{!CartSO.Apttus_Config2__LocationId__c}" 
+														  rendered="{!IsLocationEnabled && NOT(IsLocationEnabled)}" />
+													  
+										&nbsp;
+										<div style="display:inline-block">
+												
+															
+												<apex:outputText escape="false" 
+				                                 				  value="{!$Label.apttus_config2__ApprovalStatus}:"
+				                                     			  style="font-weight:bold; color:#5487B9; padding-left:6px;" />
+												&nbsp;
+			                             		<apex:outputField value="{!CartSO[BOStatusFieldName]}" 
+																  rendered="{!ShowBOStatusField}" />
+																  
+												<apex:image rendered="{!ShowApprovalRequiredIcon}"
+															style="height:20px;vertical-align:middle; padding-left:6px;"
+															url="{!$Resource.Apttus_Config2__Image_StopHand}"
+															alt="Approval Required"
+															title="Approval Required" />
+												&nbsp;&nbsp;&nbsp;
+			                             		<apex:outputField value="{!CartSO[BORelatedFieldName]}" 
+																  rendered="{!ShowBORelatedField}" />																			  
+										</div>												 				
+									</div>
+													 
+	                             </td>
+	                            
+	                         </tr>
+	                        </table> 
+			</div>
+			
+			<div style="float:right;padding-top:2px;">
+	                    	<apex:outputPanel style="text-align: right; padding-right: 4px;"
+	                              			  layout="block" 
+	                              			  id="idTopNavActions">
+	                              <apex:commandButton value="{!$Label.apttus_config2__Abandon}"
+	                                  				  action="{!doAbandon}" 
+	                                  				  immediate="true"
+	                                  				  rendered="{!IsActionAbandonEnabled}"
+	                                  				  style="background-color:#657383;background-image:none;color:white;"/>
+	                      </apex:outputPanel>
+			</div>
+			<div style="float:right;padding-top:9px;">
+		                     <apex:outputPanel style="text-align: right; padding-right: 20px;" layout="block">
+		                         <apex:image url="{!$Resource.Apttus_Config2__Apttus_Logo}" title="" alt="" />
+		                     </apex:outputPanel>
+			</div>
+			<div style="clear:both;"/>
+		</div>
+     
+     
+</apex:component>

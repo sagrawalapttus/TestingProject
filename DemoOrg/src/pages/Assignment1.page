@@ -1,0 +1,17 @@
+<apex:page controller="AccountCustomController">
+  <apex:form >
+      <apex:pageBlock title="Hello {!$User.FirstName}">
+          Here are all Accounts in system
+      </apex:pageBlock>
+      
+      <apex:pageBlock >
+          <apex:pageBlockTable value="{!lstaccount}" var="acct" >
+              <apex:column value="{!acct.Name}"/>
+               <apex:column value="{!acct.Billing_State_Province__c}"/>
+              <apex:column value="{!acct.Phone}"/>
+              <apex:column value="{!acct.Website}"/>
+          </apex:pageBlockTable>
+      </apex:pageBlock>
+  </apex:form>
+  
+</apex:page>

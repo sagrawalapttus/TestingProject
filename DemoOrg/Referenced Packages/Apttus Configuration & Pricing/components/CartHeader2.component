@@ -1,0 +1,225 @@
+<!-- 
+    Apttus Config & Pricing
+    CartHeader
+     
+    @2011-2013 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.CartHeaderController" 
+				access="global"
+				allowDML="true" >	
+    
+    <!--  cart id -->
+    <apex:attribute name="cartId" 
+    				description="Cart ID" 
+    				type="ID" 
+    				required="true"
+    				access="global"
+    				assignTo="{!CartIdProp}" />
+    								
+    <!--  cart request id -->
+    <apex:attribute name="requestId" 
+    				description="Request ID" 
+    				type="ID" 
+    				required="true"
+    				access="global"
+    				assignTo="{!RequestIdProp}" />
+    
+    <!--  cart read only -->
+    <apex:attribute name="readOnly" 
+    				description="Read Only" 
+    				type="BOOLEAN" 
+    				required="false"
+    				assignTo="{!ReadOnlyProp}" />
+    				
+    <apex:includeScript value="{!URLFOR($Resource.Apttus_Config2__AptBreadCrumb, 'js/bootstrap.js')}"/>
+    <script type="text/javascript">
+   		var j$ = jQuery.noConflict();
+   		if(typeof j$.APTTUS !== "undefined"){
+			var dummyCostElement = j$('#idDummyCurrency span');
+			var dummyCost = dummyCostElement.text();
+			//remove multicurrency section
+			if (dummyCost.indexOf("(") != -1) {
+				var multiCurrencySection = dummyCost.substring(dummyCost.indexOf("(")-1,dummyCost.length);
+				dummyCost = dummyCost.replace(multiCurrencySection,"");
+
+			} 
+			//check if empty string
+			if(dummyCost.length < 3){
+				j$.APTTUS.currencyTemplate = '';
+				
+			} else {
+				j$.APTTUS.currencyTemplate = dummyCost;
+				
+				
+			}
+		}
+		
+		function aptClearButtons(){
+        	j$('.idCommands .pageButtons, #aptTopButtons, .bottomButtons .pageButtons, #apt-catalogLinks, .apt-helpDropDown, .taskPageButtons').html('');
+        	j$('.taskPageButtons').append('<li class="aptProductListHeader">&nbsp;&nbsp;&nbsp;{!$Label.FollowTheseSteps}</li>');
+        	
+        }
+        
+		function aptUpdateCartQuantity(){
+			//cart line item count
+			var aptCartLineItemCount;
+			
+			//if count is undefined or empty
+			if(j$('#aptCartItemCount').html() == '' || !j$('#aptCartItemCount').html()){
+				aptCartLineItemCount = 0;
+			}else{
+				aptCartLineItemCount = j$('#aptCartItemCount').html();
+			}
+			
+			//set cart line item count in header
+			j$('#aptAddCartItemCount').html(aptCartLineItemCount);
+		}
+
+		// copy the idTotalsPanel to the cart header dropdown
+		function copyMiniCartToCartHeaderDropdown() {
+			//if mini cart block exists move it to the dropdown area else hide cart in header
+			if(document.getElementById('{!$Component.idMiniCartComponent}')) {		
+				j$('.apt-cartDropDown').html(
+					j$(document.getElementById('{!$Component.idMiniCartComponent}')).clone().html());							
+			}else{
+				j$('.apt-mini-cart-panel').hide();
+				
+			}
+		}
+		
+		j$(function() {
+			
+			//set dropdowns
+			j$('.apt-dropdown-toggle').dropdown();
+
+			// hide open dropdowns
+			j$(document).click(function() {
+				j$('.open').hide();
+				j$('.open').removeClass('open');
+
+			});
+			
+			aptUpdateCartQuantity();
+			
+			j$('#apt-locationPanel').html(j$('.aptLocationSection'));
+			//j$('.apt-browseCatalogDropDown').html(j$('.apt-treeView'));
+			
+			//disable close of dropdown on click of dropdown
+			j$('.taskPageButtons, .apt-cartDropDown, .apt-moreDropDown').click(function(e) {
+		        e.stopPropagation();
+		    });
+		    
+		    if(!{!IsFixedButtonBar}){
+		    	j$('.apt-headerPlacement').after(j$('.apt-powered-logo'));
+            }
+
+            if(j$.APTTUS.showShoppingCartIcon) {
+	    		copyMiniCartToCartHeaderDropdown();                        
+            } else {
+            	// hide mini-cart panel 
+            	j$('.apt-mini-cart-panel').hide();
+            }
+            
+            //add approval status class
+            j$('.approvalIcon').addClass('icon-status-' + j$('.approvalText').text().replace(/ /g, '').toLowerCase());
+            
+            j$('body').show();
+		}); 
+	</script> 
+	<style>
+		body{
+			display:none;
+		}
+		#aptGeneralSpinner{
+			display:inline-block;
+			position:relative;
+		}
+		.apt-gen-spinner img{
+			vertical-align: sub;
+			margin-right: 5px;
+		}
+		.cartTable{
+			text-align:center;
+		}
+		.apt-mini-cart-panel{
+			text-align:left;
+		}
+	</style>				
+    <!--[if gte IE 8]>
+    <style type="text/css">
+    	#apt-miniCartPanel{
+			padding:0px 5px 0px 0;
+		}
+	</style>
+	<![endif]-->
+	<div id="idDummyCurrency" style="display:none;">
+   		<apex:outputField style="display:none;" value="{!dummyLineItem.Apttus_Config2__BaseCost__c}"/>
+   	</div>
+   	<div class="apt-page-header cartTable clearfix">
+ 		<div class="dropdown apt-pull-left">
+	 		<div class="apt-hamburger-icon apt-dropdown-toggle" id="stepMenu" role="button" data-toggle="dropdown">
+	 			<div class="icon-utility-rows"></div>
+	 		</div>
+			<ul class="apt-list-dropdown dropdown-menu taskPageButtons dropdown-menu-top" role="menu" aria-labelledby="stepMenu">
+				
+			</ul>
+		</div>
+ 		<div class="apt-quote-panel apt-pull-left">
+                <apex:outputText escape="false"
+                				 styleClass="apt-cart-head-label"
+                 				  value="{!$Label[fromBizType]}:" />
+									&nbsp;
+									
+				<apex:outputField value="{!CartSO[BOLookupFieldName]}" 
+								  rendered="{!ShowBOLookupField}" styleClass="apt-quote-link" />
+											  
+				<apex:outputText escape="false"
+								 value="{!fromBizTitle}"
+								 styleClass="apt-location-text apt-cart-head-label" 
+								 rendered="{!ShowBOTitle}" />
+							
+				<apex:outputField value="{!CartSO.Apttus_Config2__LocationId__c}"
+								  styleClass="apt-locationId"
+								  rendered="{!IsLocationEnabled && NOT(IsLocationEnabled)}" />
+							
+			</div>
+			<div class="apt-aprroval-panel apt-pull-left">
+							<apex:outputText escape="false" 
+											 styleClass="apt-cart-head-label"
+                                			 value="{!$Label.apttus_config2__ApprovalStatus}:" />
+							
+							<apex:outputPanel styleClass="approvalText">
+                            		<apex:outputField value="{!CartSO[BOStatusFieldName]}" 
+                            						  rendered="{!ShowBOStatusField}"/>													
+							</apex:outputPanel>
+							
+							<apex:outputPanel rendered="{!ShowApprovalRequiredIcon}" styleClass="approvalIcon"/> 
+							
+							<apex:outputField value="{!CartSO[BORelatedFieldName]}" 
+											  rendered="{!ShowBORelatedField}" /> 
+			</div>
+			<div id="aptGeneralSpinner"></div>
+			<div class="apt-headerPlacement apt-pull-right">
+			</div>
+			<div class="dropdown apt-help-panel apt-pull-right">
+				<div class="apt-dropdown-toggle" id="apt-helpIcon" role="button" data-toggle="dropdown">
+					<div class="icon-utility-help">
+					</div>
+				</div>
+				<ul class="apt-list-dropdown dropdown-menu dropdown-menu-top apt-helpDropDown" role="menu" aria-labelledby="apt-helpIcon">
+				</ul>
+			</div>
+			<div class="dropdown apt-mini-cart-panel apt-pull-right">
+				<div id="apt-cartIcon" role="button" data-toggle="dropdown" class="apt-dropdown-toggle">
+					<div id="apt-miniCartPanel" class="apt-pull-left icon-utility-cart"></div> {!$Label.Cart} (<span id="aptAddCartItemCount"></span>) <span class="icon-utility-down"></span>
+				</div>
+				<div class="dropdown-menu dropdown-menu-top apt-cartDropDown" role="menu" aria-labelledby="apt-cartIcon">
+				</div>
+			</div>
+			<div id="apt-locationPanel" class="apt-location-panel apt-pull-right">
+				
+			</div>
+	</div>		
+     
+</apex:component>

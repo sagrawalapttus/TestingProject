@@ -1,0 +1,152 @@
+<!-- 
+    Apttus Config & Pricing
+    Pricing
+     
+    @2010-2014 Apttus Inc. All rights reserved.
+ -->
+<apex:page standardController="Apttus_Config2__ProductConfiguration__c"
+		   extensions="Apttus_Config2.PricingController" 
+		   showHeader="{!ShowHeader}"
+           sidebar="true"
+           standardStylesheets="true"
+		   cache="false" 
+		   tabstyle="Product2" >
+	
+	<apex:includeScript value="{!URLFOR($Resource.Apttus_Config2__JQueryUILibrary19, 'js/jquery-1.8.3.min.js')}"/>
+ 	
+ 	<apex:include pageName="Apttus_Config2__ConfigJSLibInclude" />
+ 	
+	<script type="text/javascript">
+		
+		// This to make sure jQuery doesn't conflict with any other JS libraries
+    	var j$ = jQuery.noConflict();
+ 		
+ 		j$(document).ready(function(){
+			
+			// setup namespace
+			j$.APTTUS = {};
+		
+			j$.APTTUS.PricingController = {};
+			j$.APTTUS.PricingController.doUpdatePriceForCart = '{!$RemoteAction.PricingController.doUpdatePriceForCart}';
+			j$.APTTUS.ConfigurationId = "{!configurationId}";
+			j$.APTTUS.LineNumbersAwaitingPrice = {!LineNumbersAwaitingPrice};
+			
+			// check and price pending line items
+    		doCheckAndUpdatePriceForCart();
+    
+		});	
+		
+		/**
+		 * Calculates price for all pending line items
+		 */
+		function doCheckAndUpdatePriceForCart() {
+		    // get parameters
+		    // current configuration id
+		    var configId = j$.APTTUS.ConfigurationId;
+		    //console.log('start doCheckAndComputePriceForCart configId = ' + configId);
+			// register to invoke the function after the page load
+            var isPricePending = "{!IsPricePending}";
+        
+		    try {
+		        var pendingLineNumbers = j$.APTTUS.LineNumbersAwaitingPrice;
+				if ((isPricePending.toLowerCase() == 'true') || 
+					(pendingLineNumbers.length > 0)) {
+					// update price
+					doUpdatePriceForCart(configId);
+					
+		        } 
+		
+		    } catch(ex) {
+		        // display the error
+		        cp_erroralert(cp_cERROR_UNKNOWN, ex);
+		    	// go to finish page
+			    goToFinishPage();
+		        
+		    } 
+		    
+		}
+
+		/**
+		 * Updates the price for items in the given product configuration
+		 * Only line items in pending status are updated.
+	 	 * Total price is always computed
+		 * @param configId the product configuration id to update the price for
+		 */
+		function doUpdatePriceForCart(configId) {
+			//console.log('doUpdatePriceForCart configId = ' + configId);
+		    try {
+		          
+	            Visualforce.remoting.Manager.invokeAction(j$.APTTUS.PricingController.doUpdatePriceForCart, configId, function(result, event) {
+	        	    try {
+	                    // check response status
+	                    if (event.status) {
+	                        // ok response, check if done
+                			//if (result.IsPricePending.toLowerCase() == 'true') {
+                			if (result.IsPricePending == true) {
+	                            // more to go
+	                            doUpdatePriceForCart(configId);
+	                            
+	                        } else {
+	                            // go to finish page
+			    				goToFinishPage();
+	                        
+	                        }
+	                        
+	                    } else {
+	                        // throw exception
+	                        alert(event.message);
+	                        // go to finish page
+		            		goToFinishPage();
+	                    
+	                    }
+	                    
+	                } catch(ex) {
+	                    // display the error
+	                    cp_erroralert(cp_cERROR_UNKNOWN, ex);
+	                    // go to finish page
+		            	goToFinishPage();
+	                      
+	                } 
+	                
+	            }, {buffer:false, escape:true, timeout:120000 });
+		           
+		    } catch(ex) {
+		        // display the error
+		        cp_erroralert(cp_cERROR_UNKNOWN, ex);
+		        // go to finish page
+			    goToFinishPage();
+					            
+		    } 
+		    
+		}
+		
+	</script>
+	
+	<apex:form id="idLineItemSO" >
+		
+		<!--  required fields -->
+		<apex:outputText value="{!Apttus_Config2__ProductConfiguration__c.Name}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__ProductConfiguration__c.Apttus_Config2__Status__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__ProductConfiguration__c.Apttus_Config2__IsPricePending__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__ProductConfiguration__c.Apttus_Config2__LineItemsAwaitingPrice__c}" rendered="false" />
+		
+	    <!-- Action Functions -->
+	    <apex:actionFunction name="goToFinishPage" 
+    						 action="{!getFinishPage}" 
+    						 immediate="true" /> 
+    						 			  
+	    <table width="100%">
+	    	<tr>
+		    	<td align="center">
+		    		<div style="height: 600px;">
+		    			<!-- 
+		    				<img class="spinnerImg" src="/img/loading.gif"/> 
+		    			-->
+		    			<img style="padding-top:3em;" src="{!URLFOR($Resource.Image_LoadingPage)}" />
+		    		</div>
+		    	</td>
+	    	</tr>
+	    </table>			  
+	</apex:form>
+
+</apex:page>

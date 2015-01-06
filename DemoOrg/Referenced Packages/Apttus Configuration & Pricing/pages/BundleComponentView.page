@@ -1,0 +1,145 @@
+<!-- 
+    Apttus Config & Pricing
+    BundleComponentView
+     
+    @2010-2011 Apttus Inc. All rights reserved.
+
+ -->
+<apex:page extensions="Apttus_Config2.BundleComponentViewController" 
+           showHeader="true"
+           sidebar="true"
+           cache="false"  
+           standardController="Apttus_Config2__BatchJob__c">	
+           
+    <script type="text/javascript">
+ 
+    /*
+    *    function to handle checkbox selection
+    */
+    function doCheckboxChange(cb,itemId){
+    	if(cb.checked==true){
+            aSelectItem(itemId);
+        }else{
+            aDeselectItem(itemId);
+        }
+
+    }
+    
+    function selectAll(cb){
+    	if(cb.checked==true){
+    		aSelectAllItems();
+    	}else{
+    		aDeselectAllItems();
+    	}
+    }
+    
+    $(document).on('keypress',function(event) {
+		if(event.keyCode==13) {
+			$('.search-button').trigger('click');
+			return false;
+		}
+	});
+    </script>
+    
+    <apex:includeScript value="{!URLFOR($Resource.Apttus_Config2__JQueryUILibrary19, 'js/jquery-1.8.3.min.js')}"/>
+ 	<apex:stylesheet value="{!$Resource.Apttus_Config2__ConfigStyles}" />	
+	
+    <apex:sectionHeader title="{!$Label.apttus_config2__UpdateBundleComponents}" />
+						
+    <apex:form id="idBundleComponents">
+    	<apex:outputPanel id="idErrorMsg">
+			<apex:pageMessages />
+		</apex:outputPanel>
+		
+		<!--  batch job monitor -->
+	    <c:BatchJobMonitor id="idBatchJobMonitor" 
+	    				   pageController="{!this}" 
+	    				   jobClassName="BundleUpdateJob" />
+	    
+	    <!-- handle select all items -->
+        <apex:actionFunction name="aSelectAllItems" action="{!doSelectAllItems}" rerender="mpb">
+        </apex:actionFunction>
+        
+        <!-- handle select all items -->
+        <apex:actionFunction name="aDeselectAllItems" action="{!doDeselectAllItems}" rerender="mpb" >
+        </apex:actionFunction>
+	    
+	    <!-- handle selected item -->
+        <apex:actionFunction name="aSelectItem" action="{!doSelectItem}" rerender="mpb">
+            <apex:param name="contextItem" value="" assignTo="{!contextItem}"/>
+        </apex:actionFunction>
+ 
+        <!-- handle deselected item -->
+        <apex:actionFunction name="aDeselectItem" action="{!doDeselectItem}" rerender="mpb">
+            <apex:param name="contextItem" value="" assignTo="{!contextItem}"/>
+        </apex:actionFunction>
+ 
+        <apex:pageBlock title="{!$Label.apttus_config2__BundleProducts}" id="mpb">
+        	<apex:pageBlockButtons location="top" >
+	 			<apex:commandButton value="{!$Label.apttus_config2__UpdateSelected}" 
+	 								action="{!doUpdateBundleComponents}" 
+	 								rerender="idBundleComponents, idErrorMsg" onComplete="aDeselectAllItems();" />
+				<apex:commandButton value="{!$Label.apttus_config2__UpdateAll}" 
+									action="{!doUpdateAllBundleComponents}"
+									disabled="{!IsUpdateScheduled}"  
+									rerender="idBundleComponents, idErrorMsg" onComplete="aDeselectAllItems();" />
+				<apex:commandButton value="{!$Label.apttus_config2__Refresh}" 
+									action="{!doRefresh}" 
+									rerender="idBundleComponents" />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<apex:inputText styleClass="search-term" value="{!searchTerm}"/>
+				<apex:commandButton styleClass="search-button" value="{!$Label.apttus_config2__Search}" action="{!doSearch}"/>
+            </apex:pageBlockButtons>
+            
+            <apex:outputLabel id="selectedRecordsCount" value="[{!selectedCount} {!$Label.apttus_config2__Records} {!$Label.apttus_config2__Selected}]" />
+            
+            <!-- next, previous and page info -->
+            <div style="float:right;">
+	            <apex:commandButton action="{!doPreviousLarge}" onClick="$('.select-all').prop('checked',false);" rendered="{!hasPreviousLarge}" value="{!$Label.apttus_config2__Previous} {!maxRecords}" />
+	            
+	            <apex:commandButton action="{!doPrevious}" onClick="$('.select-all').prop('checked',false);" disabled="{!NOT(hasPrevious)}" value="{!$Label.apttus_config2__Previous}" />
+	 
+	            <apex:outputLabel value=" (page {!pageNumber} of {!totalPages}) " />
+	 
+	            <apex:commandButton action="{!doNext}" onClick="$('.select-all').prop('checked',false);" disabled="{!NOT(hasNext)}" value="{!$Label.apttus_config2__Next}" />
+	            
+	            <apex:commandButton action="{!doNextLarge}" onClick="$('.select-all').prop('checked',false);" rendered="{!hasNextLarge}" value="{!$Label.apttus_config2__Next} {!maxRecords}" />
+            </div>
+            <!-- table of data -->
+            <apex:pageBlockTable id="idBundles" title="{!$Label.apttus_config2__BundleProducts}" value="{!products}" var="bundle">
+                <apex:column >
+                    <apex:facet name="header"><apex:inputCheckbox styleClass="bundle-check select-all" onchange="selectAll(this);$('.bundle-check').prop('disabled',true);"/></apex:facet>
+                    <apex:inputCheckbox styleClass="bundle-check {!bundle.productSO.Id}bundle" 
+                    					value="{!bundle.IsSelected}"
+                    					disabled="{!bundle.IsScheduled}" 
+                    					onchange="doCheckboxChange(this,'{!bundle.productSO.Id}');"/>
+                </apex:column>
+                <apex:column value="{!bundle.productSO.Name}"/>
+                <apex:column headerValue="{!$Label.apttus_config2__LastUpdated}">
+                	<apex:outputPanel rendered="{!NOT(bundle.productSO.SystemComponents__r.empty)}">
+                		<apex:outputField value="{!bundle.productSO.SystemComponents__r[0].LastModifiedDate}" />
+                	</apex:outputPanel>
+                	<apex:outputPanel rendered="{!bundle.productSO.SystemComponents__r.empty}">
+                		<strong>{!$Label.apttus_config2__NeedsToBeRun}</strong>
+                	</apex:outputPanel>
+                </apex:column>
+            </apex:pageBlockTable>
+ 
+            <!-- count of selected items -->
+            <apex:outputLabel id="selectedRecordsCount2" value="[{!selectedCount} {!$Label.apttus_config2__Records} {!$Label.apttus_config2__Selected}]" />
+ 			
+ 			<div style="float:right;">
+	           <apex:commandButton action="{!doPreviousLarge}" onClick="$('.select-all').prop('checked',false);" rendered="{!hasPreviousLarge}" value="{!$Label.apttus_config2__Previous} {!maxRecords}" />
+	            
+	            <apex:commandButton action="{!doPrevious}" onClick="$('.select-all').prop('checked',false);" disabled="{!NOT(hasPrevious)}" value="{!$Label.apttus_config2__Previous}" />
+	 
+	            <apex:outputLabel value=" (page {!pageNumber} of {!totalPages}) " />
+	 
+	            <apex:commandButton action="{!doNext}" onClick="$('.select-all').prop('checked',false);" disabled="{!NOT(hasNext)}" value="{!$Label.apttus_config2__Next}" />
+	            
+	            <apex:commandButton action="{!doNextLarge}" onClick="$('.select-all').prop('checked',false);" rendered="{!hasNextLarge}" value="{!$Label.apttus_config2__Next} {!maxRecords}" />
+ 			</div>
+        </apex:pageBlock>
+	</apex:form>
+	
+</apex:page>

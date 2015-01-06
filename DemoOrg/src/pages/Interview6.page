@@ -1,0 +1,50 @@
+<apex:page controller="Interview6" sidebar="false">
+    <apex:form >
+        <apex:pageblock >
+            <apex:pageblockSection >
+                <apex:sectionHeader title="Input"/><br/>
+                <apex:pageBlockSectionItem >  
+                    <apex:outputLabel >City</apex:outputLabel>
+                    <apex:inputText id="inptCity" value="{!City}"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem > 
+                    <apex:outputLabel >State</apex:outputLabel>
+                    <apex:inputText id="inptState" value="{!State}"/>
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem > 
+                    <apex:outputLabel >Type</apex:outputLabel>
+                    <apex:selectRadio title="Type" id="selectType" value="{!Type}">
+                        <apex:selectOption itemLabel="XML" itemValue="XML"></apex:selectOption>
+                        <apex:selectOption itemLabel="JSON" itemValue="JSON"></apex:selectOption>
+                    </apex:selectRadio>
+                 </apex:pageBlockSectionItem><br/>
+                 
+                 <apex:outputText value="{!Type}"></apex:outputText>
+                 
+                 <apex:pageBlockSectionItem >
+                     <apex:commandButton id="Submit" value="Submit" action="{!Submit}"/>
+                 </apex:pageBlockSectionItem>
+            </apex:pageblockSection>
+            
+           <apex:pageblockSection >
+                <apex:sectionHeader title="Output"/><br/>
+                <apex:pageBlockSectionItem >  
+                    <apex:outputLabel >HttpResponse</apex:outputLabel>
+                    <apex:inputTextarea id="inptHttpResponse" value="{!HTTP_Response}"/>
+                </apex:pageBlockSectionItem><br/>
+                
+                <apex:pageBlockSectionItem > 
+                    <apex:outputLabel >Latitude </apex:outputLabel>
+                    <apex:inputText id="inptLatitude" value="{!Latitude}"/>
+                 </apex:pageBlockSectionItem><br/>
+                 
+                 <apex:pageBlockSectionItem > 
+                    <apex:outputLabel >Longitude </apex:outputLabel>
+                    <apex:inputText id="inptLongitude" value="{!Longitude}"/>
+                 </apex:pageBlockSectionItem>
+            </apex:pageblockSection>
+        </apex:pageblock>
+    </apex:form>  
+</apex:page>

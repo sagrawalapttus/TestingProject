@@ -1,0 +1,19 @@
+<apex:page controller="Assignment4Controller" sidebar="false">
+    <apex:form >
+    <apex:pageblock >       
+            <apex:repeat Value="{!map1}" var="key">                
+                <!--<apex:outputText>{!mapAccount[key]}</apex:outputText>-->
+                
+                 <apex:pageblockSection title="{!mapAccount[key]}" >
+                <apex:pageBlockTable value="{!map1[key]}" var="keyVal" columns="4" width="500px">
+                    <apex:column value="{!keyVal.FirstName}"/>
+                    <apex:column value="{!keyVal.LastName}"/>
+                    <apex:column value="{!keyVal.Phone}"/>
+                    <apex:column value="{!keyVal.Email}"/>
+                </apex:pageBlockTable>
+                </apex:pageblockSection> 
+            </apex:repeat>
+         
+     </apex:pageblock>
+    </apex:form>
+</apex:page>

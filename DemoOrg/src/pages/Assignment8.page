@@ -1,0 +1,29 @@
+<apex:page sidebar="false" standardController="Account" recordSetVar="accounts" >
+<header>
+    <script type="text/javascript">
+        
+        function SetAccountName(accName)
+        {           
+            document.getElementById("divAccName").innerHTML = "Welcome Account " +  accName;
+        }
+    </script>
+    </header>
+    <apex:form >
+         <apex:pageBlock >
+             <apex:pageMessage severity="low">
+                 <div id="divAccName">Select an account name by clicking it''s name</div>
+             </apex:pageMessage>
+         
+            <apex:pageblockTable value="{!accounts}" var="acc">
+                <apex:selectRadio title="Type" id="selectType" >                    
+                </apex:selectRadio>
+                <apex:column value="{!acc.Name}" headerValue="Name"  onclick="SetAccountName('{!acc.Name}')"/>
+                <apex:column headerValue="Account Name" value="{!acc.name}"  onclick="SetAccountName('{!acc.name}')"/>
+                <apex:column value="{!acc.Billing_State_Province__c}" headerValue="Billing State" />
+                <apex:column value="{!acc.Phone}"/>
+                <apex:column value="{!acc.Website}"/>
+            </apex:pageblockTable>
+        </apex:pageBlock>
+    </apex:form>
+  
+</apex:page>

@@ -1,0 +1,25 @@
+<!-- 
+    Apttus Contract Management
+    RecordTypeList
+     
+    @2009-2013 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus.RecordTypeListController">
+	<apex:attribute name="sObjectType" 
+					description="Object Name" 
+					type="String" 
+					required="true" 
+					default="APTS_Agreement__c" 
+					assignTo="{!sObjectType}" />
+				
+	<apex:attribute name="recordType" 
+					description="Chosen Record Type" 
+					type="ID" 
+					required="true" />
+					
+	<apex:selectList value="{!recordType}" size="1" required="true">
+		<apex:selectOptions value="{!Items}" />
+	</apex:selectList>
+	
+</apex:component>

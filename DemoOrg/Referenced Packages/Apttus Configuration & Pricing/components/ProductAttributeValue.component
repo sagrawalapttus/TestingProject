@@ -1,0 +1,10 @@
+<!-- 
+    Apttus Config & Pricing
+    ProductAttributeValue
+     
+    @2010-2011 Apttus Inc. All rights reserved.
+    
+    deprecated
+    
+ -->
+<apex:component controller="Apttus_Config2.ProductAttributeValueController" />

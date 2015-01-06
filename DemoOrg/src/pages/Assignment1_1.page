@@ -1,0 +1,19 @@
+<apex:page standardController="Account">
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+  This is your new Page
+  <!-- End Default Content REMOVE THIS -->
+  <apex:form >
+  <apex:pageBlock title="Hello {!$User.FirstName}!">
+          You are viewing the all Accounts  changed //by sweety
+          </apex:pageBlock>
+           <apex:pageBlock title="Accounts">
+                  
+        
+      <apex:pageBlockTable value="{!account}" var="account"> 
+          <apex:column value="{!account.Name}"/>
+         
+      </apex:pageBlockTable> 
+        </apex:pageBlock>
+  </apex:form>
+</apex:page>

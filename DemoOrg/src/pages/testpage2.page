@@ -1,0 +1,10 @@
+<apex:page controller="MyTestClass">      
+        <apex:pageBlock >
+           <apex:pageBlockSection >
+               <apex:pageBlockTable value="{!lstBooks}" var="item">
+                   <apex:column value="{!item.Name}"/>
+                   <apex:column value="{!item.Price__c}"/>
+               </apex:pageBlockTable>
+           </apex:pageBlockSection>
+        </apex:pageBlock>  
+</apex:page>

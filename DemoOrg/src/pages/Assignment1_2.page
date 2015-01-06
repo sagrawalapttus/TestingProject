@@ -1,0 +1,28 @@
+<apex:page controller="AccountCustomController" tabStyle="Account">
+  <apex:form >
+      <apex:pageblock title="Hello {!$User.FirstName}">
+          Here are all accounts to do insert,update and delete
+      </apex:pageblock>
+      
+      
+     
+      
+      <apex:pageBlock title="Accounts CRUD" mode="edit" id="lstAccounts">
+      
+       <apex:pageBlockSection > 
+          <apex:inputField value="{!myAccount.Name}" />
+          <apex:inputField value="{!myAccount.Website}"/>
+      </apex:pageBlockSection>
+          <apex:pageblockTable value="{!lstaccount}" var="acct">
+              <apex:column ><apex:inputField value="{!acct.Name}"/></apex:column>
+             <apex:column ><apex:inputField value="{!acct.WebSite}" /></apex:column>
+          </apex:pageblockTable>
+          
+          
+      <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Save" action="{!save}" reRender="lstAccounts"/>
+            </apex:pageBlockButtons>
+      </apex:pageBlock>
+      
+  </apex:form>
+</apex:page>

@@ -1,0 +1,88 @@
+<!-- 
+    Apttus Config & Pricing
+    SelectProductsSettings
+     
+    @2011-2012 Apttus Inc. All rights reserved.
+
+ -->
+<apex:page controller="Apttus_Config2.SelectProductsSettingsController" 
+           standardStylesheets="true"
+           setup="true"
+           tabStyle="Apttus_Config2__ConfigSelectConfigProductsSettings__c" >	
+    
+    <apex:stylesheet value="{!$Resource.Apttus_Config2__ConfigStyles}" />
+    
+    <style type="text/css">
+    
+		textarea {
+			width: 40%;
+		}
+		
+	</style>
+	
+	<apex:sectionHeader title="{!$Label.apttus_config2__ConfigSettings}"  
+						subtitle="{!$Label.apttus_config2__CatalogPageSettings}" />
+											
+	<apex:form id="idSelectProductsSettings">
+		
+		<apex:pageBlock id="idSelectProductsBlock" 
+						mode="edit" >
+			<apex:pageMessages />
+			<apex:pageBlockButtons location="top">
+		        <apex:commandButton value="{!$Label.apttus_config2__Save}" 
+		        					action="{!doSave}" />				
+		        <apex:commandButton value="{!$Label.apttus_config2__Cancel}" 
+		        					action="{!doCancel}" 
+		        					immediate="true" />
+		    </apex:pageBlockButtons>
+					
+			<apex:pageBlockSection columns="2" title="{!$Label.apttus_config2__GeneralPageSettings}" collapsible="true">
+				<apex:inputField value="{!settings.Apttus_Config2__MainSectionRatio__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideHelpMeChoose__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideDefaultOptionsInDescription__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__CustomActionLabelName__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideConfigureAction__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__CustomActionPage__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__ReadOnlyLocation__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__EnableCategoryFilter__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__SearchQueryLimit__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__CacheAllProducts__c}"/>
+				
+			</apex:pageBlockSection>
+			
+			<apex:pageBlockSection columns="2" title="{!$Label.apttus_config2__ProductListSettings}" collapsible="true">
+				<apex:inputField value="{!settings.Apttus_Config2__ListedProductsColumn2__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideListedProductsPriceColumn__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__ListedProductsColumn3__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideBreadcrumb__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideCompareProducts__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__CarouselDefaultIcon__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideProductImage__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideNarrowYourSearch__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__ShowQuantity__c}"/>
+			</apex:pageBlockSection>
+								
+			<apex:pageBlockSection columns="2" title="{!$Label.apttus_config2__MiniCartSettings}" collapsible="true">
+				<apex:inputField value="{!settings.Apttus_Config2__SelectedProductsColumn2__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideSelectedProductsColumn1__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__SelectedProductsColumn3__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__ShowCartIcon__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__SelectedProductsColumn4__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__ShowSelectedProductAllCharges__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__OrderStatusFields__c}"/>
+			</apex:pageBlockSection>
+			<apex:pageBlockSection columns="2" title="{!$Label.apttus_config2__OtherPageSettings}" collapsible="true">
+				<apex:inputField value="{!settings.Apttus_Config2__ShowProductIconCartDetailView__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__ShowRecommendedProductsCartView__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__ShowSelectedProductsInConfigOptions__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__CartListItemDescriptionField__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__CollapseAllLeafOptionGroups__c}"/>
+				<apex:inputField value="{!settings.Apttus_Config2__HideLineItemAttributeDetails__c}"/>
+				
+			</apex:pageBlockSection>					
+			
+		</apex:pageBlock>			
+	
+	</apex:form>           
+           
+</apex:page>

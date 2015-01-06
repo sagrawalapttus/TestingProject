@@ -1,0 +1,72 @@
+<!-- 
+    Apttus Config & Pricing
+    ProductAttributeLookup
+     
+    @2010-2011 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.ProductAttributeLookupController" >	
+    
+	<!--  page controller - specify page controller associated with the component. The page controller is
+	used to locate the select controller to delegate the select action to. 
+	-->	
+	<apex:attribute name="pageController" 
+					description="Page Controller" 
+					type="Apttus_Config2.PageControllerBase" 
+					required="true" 
+					assignTo="{!pageControllerProp}" />
+					
+ 	<apex:stylesheet value="{!$Resource.Apttus_Config2__ConfigStyles}" />
+	
+	<apex:pageBlock id="idProductAttributeLookupBlock" mode="edit" rendered="{!isEnabled}" >
+		<apex:pageMessages />
+		
+		<apex:pageBlockButtons location="both">
+	        <apex:commandButton value="{!$Label.apttus_config2__Cancel}" 
+	        					action="{!doCancel}" 
+	        					immediate="true" />
+	    </apex:pageBlockButtons>
+				    
+	    <apex:pageBlockSection id="idAttributeGroupSection" 
+	    					   columns="2" 
+	    					   collapsible="false" >
+	    	
+	    	<apex:pageBlockSectionItem >
+				<apex:outputLabel value="{!$ObjectType.Apttus_Config2__ProductAttribute__c.Fields.Apttus_Config2__AttributeGroupId__c.Label}" 
+								  for="idAttributeGroup" />
+					<apex:panelGrid columns="2">
+						<apex:selectList id="idAttributeGroup" 
+										 value="{!attributeGroupId}" 
+										 multiselect="false" 
+										 required="false" 
+										 size="1" >
+							<apex:selectOptions value="{!attributeGroupItems}"></apex:selectOptions>
+						</apex:selectList>
+						<apex:commandButton action="{!doSearch}" value="{!$Label.apttus_config2__Go}!" />
+					</apex:panelGrid>
+			</apex:pageBlockSectionItem>
+			
+			<apex:pageBlockSectionItem />
+						   
+	        <apex:pageBlockTable id="idRecordSetPanel"
+	        					 title="{!$ObjectType.Apttus_Config2__ProductAttribute__c.LabelPlural}"
+	        					 value="{!productAttributes}" 
+	        					 var="attrSO" 
+	        					 columns="2" 
+	        					 rendered="{!hasProductAttributes}" >
+	        	
+	        	<apex:column headerValue="{!$ObjectType.Apttus_Config2__ProductAttribute__c.Fields.Name.Label}">
+	        		<apex:commandLink action="{!doSelectProducAttribute}" 
+	        						  value="{!attrSO.Name}" >
+						<apex:param name="productAttributeId" value="{!attrSO.Id}"/>
+					</apex:commandLink>
+				</apex:column>
+				<apex:column value="{!attrSO.Apttus_Config2__Field__c}" />
+	        </apex:pageBlockTable>
+	        <apex:outputText value="{!$Label.apttus_config2__NoRecordsToDisplay}" rendered="{!NOT(hasProductAttributes)}" />
+	        
+	    </apex:pageBlockSection>
+			   
+	</apex:pageBlock>
+	   
+</apex:component>

@@ -1,0 +1,171 @@
+<!-- 
+    Apttus Config & Pricing
+    ConfigureOption
+     
+    @2010-2014 Apttus Inc. All rights reserved.
+ -->
+<apex:page standardController="Apttus_Config2__LineItem__c"
+           extensions="Apttus_Config2.ConfigureOptionController"
+           showHeader="false"
+		   sidebar="false"
+		   action="{!doLoad}" >
+	<apex:stylesheet value="{!URLFOR($Resource.Apttus_Config2__CPQPageResources,'CPQCommon.css')}" />
+	<apex:includeScript value="{!URLFOR($Resource.Apttus_Config2__JQueryUILibrary19, 'js/jquery-1.8.3.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Apttus_Config2__JQueryUILibrary19, 'js/jquery-ui-1.9.2.custom.min.js')}"/>
+    <script>
+    	j$ = jQuery.noConflict();
+    	j$(document).ready(function(){
+    		var attributesDialogHeader = j$('.aptHeader h2').html();
+    		parent.setAttributeDialogHeader(attributesDialogHeader);
+    	
+    	})
+    </script>
+	<style>
+    	.aptProductHeader {
+			background: -moz-linear-gradient(top,  rgba(30,87,153,1) 0%, rgba(125,185,232,0) 100%);
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(30,87,153,1)), color-stop(100%,rgba(125,185,232,0)));
+			background: -webkit-linear-gradient(top,  rgba(30,87,153,1) 0%,rgba(125,185,232,0) 100%);
+			background: -o-linear-gradient(top,  rgba(30,87,153,1) 0%,rgba(125,185,232,0) 100%);
+			background: -ms-linear-gradient(top,  rgba(30,87,153,1) 0%,rgba(125,185,232,0) 100%);
+			background: linear-gradient(to bottom,  rgba(30,87,153,1) 0%,rgba(125,185,232,0) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#007db9e8',GradientType=0 );
+			border-radius: 3px;
+			height:30px;
+		}
+		.aptContextSystem {
+			text-align: left;
+			position: absolute;
+			left: 2em;
+		}
+		
+		.aptLeftPadding {
+			left: 2em;
+		}
+		
+		.aptQuantity {
+            text-align: right;
+            width:3em;
+        }
+        .clearfix {
+			float: none;
+			clear: both;
+		}
+		
+		.oddRow {
+			border-color: transparent;
+			height: 3em;
+		}
+		
+		.evenRow {
+			border-color: transparent;
+			height: 3em;
+		}
+		
+		.headerClass {
+			height: 2.5em;
+			font-size: 1em;
+			font-family: sans-serif;
+		}
+		
+		.bPageBlock {
+            border: none !important;
+        }   
+        
+        .aptGroupHeader {
+			background: -moz-linear-gradient(top,  rgba(211,211,211,0.65) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(211,211,211,0.65)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(top,  rgba(211,211,211,0.65) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(top,  rgba(211,211,211,0.65) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(top,  rgba(211,211,211,0.65) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
+			background: linear-gradient(to bottom,  rgba(211,211,211,0.65) 0%,rgba(255,255,255,0) 100%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6d3d3d3', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+			
+			height:30px;
+				
+		}
+		
+		.aptGroupHeaderHeaderPadding {
+			padding:5px;
+		}
+
+	</style>
+	<apex:form id="idAttributesList">
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__ProductId__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__OptionId__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.ProductId__r.Name}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.ProductId__r.Apttus_Config2__IconId__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.ProductId__r.Apttus_Config2__IconSize__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__ConfigurationId__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__PriceListId__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__LineNumber__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__PrimaryLineNumber__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__ItemSequence__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__Quantity__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__Customizable__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__HasOptions__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__HasAttributes__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__AttributeValueId__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__LineType__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__LineStatus__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.OptionId__r.Name}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__ParentBundleNumber__c}" rendered="false" />
+		<apex:outputText value="{!Apttus_Config2__LineItem__c.Apttus_Config2__BaseProductId__c}" rendered="false" />
+		
+		<apex:outputPanel id="idErrorMsg" layout="block" style="margin-left:10px; margin-right:10px; padding-bottom:1em;" styleClass="idErrorMsg">
+			<apex:pageMessages />
+		</apex:outputPanel>
+		
+			<apex:outputPanel styleClass="aptHeader" rendered="{!NOT(ISBLANK(lineItemSO)) && IsBundleLineItem}"  >
+				<h2 style="margin-top: 10px; display:none; margin-bottom: 10px;">{!$Label.apttus_config2__ConfigureAttributesFor} {!Apttus_Config2__LineItem__c.ProductId__r.Name}</h2>
+			</apex:outputPanel>
+			<apex:outputPanel styleClass="aptHeader" rendered="{!NOT(ISBLANK(lineItemSO)) && IsOptionLineItem}"  >
+				<h2 style="margin-top: 10px; display:none; margin-bottom: 10px;">{!$Label.apttus_config2__ConfigureAttributesFor} {!Apttus_Config2__LineItem__c.OptionId__r.Name}</h2>
+			</apex:outputPanel>
+			<apex:outputPanel rendered="{!HasAssociatedAttributes}">
+				<!--  Start Attribute Groups -->
+				<apex:repeat value="{!AttrGroups}" var="grp" id="idAttributeGroups">                      
+				    <div class="aptGroupHeader" id="{!grp.groupName}">
+				         <div class="aptGroupHeaderHeaderPadding" >
+				            <h2>{!grp.groupName}</h2>
+				         </div>
+				    </div>  
+				    <apex:pageBlock id="idProductAttributeGroupsBlock">
+				        <apex:pageBlockSection columns="{!IF(grp.twoColumnDisplay, '2', '1')}" 
+				              collapsible="true" >                        
+				            <!-- attribute value fields -->
+				            <apex:repeat value="{!grp.productAtributes}" var="f">
+				                <apex:outputField rendered="{!f.Apttus_Config2__IsReadOnly__c}" value="{!attributeValueSO[f.Apttus_Config2__Field__c]}" />
+				                <apex:inputField rendered="{!NOT(f.Apttus_Config2__IsReadOnly__c)}" value="{!attributeValueSO[f.Apttus_Config2__Field__c]}" />
+				            </apex:repeat>                     
+				        </apex:pageBlockSection>
+				     </apex:pageBlock>                        
+				</apex:repeat>	
+				<div style="text-align:center">
+			
+					<apex:commandButton value="{!$Label.apttus_config2__QuickSave}"
+										action="{!doSaveAttributeValue}"
+										rerender="idErrorMsg, idAttributeGroups"
+										styleClass="aptListButton"/>
+					<apex:commandButton value="{!$Label.apttus_config2__Save}"
+										action="{!doSaveAttributeValue}"
+										oncomplete="if({!HasError} == false) { parent.closeAttributesDialog();}"
+										rerender="idErrorMsg, idAttributeGroups"
+										styleClass="aptListButton"/>
+					<apex:commandButton value="{!$Label.apttus_config2__Cancel}"
+										oncomplete="parent.closeAttributesDialog();"
+										rerender="idErrorMsg, idAttributeGroups"
+										styleClass="aptListButton"/>
+				</div>	
+			</apex:outputPanel>
+			<apex:outputPanel rendered="{!NOT(HasAssociatedAttributes)}">
+				<apex:outputText style="padding-left: 25px; font-weight: bold;" value="{!$Label.apttus_config2__NoAttributestoDisplay}"></apex:outputText>
+				<div style="text-align:center">
+					<apex:commandButton value="{!$Label.apttus_config2__Cancel}"
+										oncomplete="parent.closeAttributesDialog();"
+										rerender="idAttributeGroups"
+										styleClass="aptListButton"/>
+				</div>
+			</apex:outputPanel>
+			
+	</apex:form>
+</apex:page>

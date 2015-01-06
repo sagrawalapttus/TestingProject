@@ -1,0 +1,398 @@
+<!-- 
+    Apttus Config & Pricing
+    MinCart
+     
+    @2012-2013 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.MiniCartController" access="public" allowDML="true" layout="block">
+    <apex:attribute name="configId" 
+                    description="Config Id" 
+                    type="ID" 
+                    required="true" 
+                    assignTo="{!ConfigurationId}" 
+                    access="public" />
+	<apex:attribute name="configRequestId" 
+                    description="Config Request Id" 
+                    type="ID" 
+                    required="true" 
+                    assignTo="{!ConfigurationRequestId}" 
+                    access="public" />    
+    <apex:attribute name="contextLineNumber" 
+                    description="Context Line Number" 
+                    type="Integer"
+                    default="0" 
+                    required="false" 
+                    access="public" />
+    <apex:attribute name="isActionGoToPricingEnabled" 
+                    description="is action-Go To Pricing-enabled" 
+                    type="Boolean"
+                    default="true" 
+                    required="false" 
+                    access="public" />
+	<apex:attribute name="isActionUpdatePriceEnabled" 
+                    description="is action-Update Price-enabled" 
+                    type="Boolean"
+                    default="true" 
+                    required="false" 
+                    access="public" />
+                    
+        <style>
+         .totalsTableContainer{
+         	font-size: 1em;
+         	
+         }
+
+        </style> 
+        <div class="apt-product-list-panel clearfix" >
+			<div >
+				<apex:outputPanel id="idSelectedProductsBlock" rendered="{!NOT(IsRightSideHidden)}" layout="block">	
+					<div class="header">
+						<div class="aptSmallBasket icon-utility-cart"></div>
+						<h2 >{!$Label.SelectedProducts}</h2>
+					</div>
+					<apex:outputPanel id="idLineItemPaginationPanel" rendered="{!refreshPaginator}" >
+						<apex:outputPanel styleClass="aptsPaginator"
+										  layout="block"
+										  rendered="{!lineItemPaging.hasDisplayLines}">
+							 	<apex:outputPanel id="idLineItemPagination" 
+												  layout="inline"
+												  style="text-align: right; width: 100%; display: inline-table;"
+												  rendered="{!true || OR(lineItemPaging.hasNextPage,lineItemPaging.hasPreviousPage)}">
+									<table width="100%"><tr>
+									<td style="text-align: left; vertical-align: middle;">			  
+										<apex:outputText value="{!lineItemPaging.pageStartIndex}-{!lineItemPaging.pageEndIndex} {!$Label.apttus_config2__OutOf} " /><span id='aptCartItemCount'>{!lineItemPaging.totalRecords}</span>
+									</td>
+									<td style="text-align: center; vertical-align: middle; text-color: red;">
+										<apex:actionStatus styleClass="idLineItemPageChangeStatus" id="idLineItemPageChangeStatus" >
+				                            <apex:facet name="start">
+					                         <img style="padding-right:5px;" src="/img/loading.gif"/>
+					                      </apex:facet>
+					                      <apex:facet name="stop">
+					                         
+					                      </apex:facet>
+					                    </apex:actionStatus>
+										 
+				                    </td>
+									<td style="text-align: right; vertical-align: middle;width:50%;">
+										<apex:image url="{!$Resource.Apttus_Config2__Image_FirstPageGray}"
+														  rendered="{!NOT(lineItemPaging.hasPreviousPage)}"
+														  style="vertical-align:middle;" /> 
+									   		<apex:image url="{!$Resource.Apttus_Config2__Image_FirstPage}"
+									           				style="vertical-align:middle;"
+									                       	onclick="invokeGetFirstLineItemPage(); return false;"
+									                       	rendered="{!lineItemPaging.hasPreviousPage}" 
+									                       	styleClass="collapsible" />
+										<apex:image url="{!$Resource.Apttus_Config2__Image_PreviousGray}"
+														  rendered="{!NOT(lineItemPaging.hasPreviousPage)}"
+														  style="vertical-align:middle;" />
+								           <apex:image url="{!$Resource.Apttus_Config2__Image_Previous}"
+								           				style="vertical-align:middle;"
+								                       	onclick="invokeGetPreviousLineItemPage(); return false;" 
+								                       	rendered="{!lineItemPaging.hasPreviousPage}"
+								                       	styleClass="collapsible" />  
+										<apex:outputText value="{!$Label.apttus_config2__Page}: {!lineItemPaging.currentPageNumber} {!$Label.apttus_config2__OutOf} {!lineItemPaging.totalPages}" style="vertical-align:middle;"/>
+										<apex:image url="{!$Resource.Apttus_Config2__Image_NextGray}"
+																  rendered="{!NOT(lineItemPaging.hasNextPage)}"
+																  style="vertical-align:middle;" />
+								           <apex:image url="{!$Resource.Apttus_Config2__Image_Next}"
+								           				style="vertical-align:middle;"
+								                       	onclick="invokeGetNextLineItemPage(); return false;" 
+								                       	rendered="{!lineItemPaging.hasNextPage}"
+								                       	styleClass="collapsible" />
+										<apex:image url="{!$Resource.Apttus_Config2__Image_LastPageGray}"
+														  rendered="{!NOT(lineItemPaging.hasNextPage)}"
+														  style="vertical-align:middle;" /> 
+								           <apex:image url="{!$Resource.Apttus_Config2__Image_LastPage}"
+								           				style="vertical-align:middle;"
+								                       	onclick="invokeGetLastLineItemPage(); return false;" 
+								                       	rendered="{!lineItemPaging.hasNextPage}"
+								                       	styleClass="collapsible" />
+									</td></tr></table> 			  
+								</apex:outputPanel>
+								  
+						</apex:outputPanel>	
+																			   
+	<!-- Shopping Cart ProductInfo -->  
+						<div id="aptSelectedProducts" style="overflow-x: auto;">
+							<apex:dataTable value="{!lineItemPaging.displayLines}" 
+												 var="lineItem"
+												 width="100%" 
+												 rules="rows" 
+												 rowClasses="oddRow, evenRow"
+												 styleClass="aptShoppingCartTable"
+												 rendered="{!lineItemPaging.hasDisplayLines}"
+												 cellpadding="3px">
+								<!-- Start Group By Search Attribute Value -->
+								
+								<!-- Product Name Link -->	        	 
+					        	<apex:column styleClass="aptSelectedProductName" rendered="{!NOT(HideLineItemColumn1)}">
+					        		<apex:facet name="header"><div style="padding-left:5px;">{!$ObjectType.Apttus_Config2__LineItem__c.Fields.Apttus_Config2__ProductId__c.Label}</div></apex:facet>
+					        		<apex:outputPanel rendered="{!lineItem.isSearchItem}"> 
+						        		<apex:outputPanel rendered="{!(lineItem.searchAttrSO.Apttus_Config2__ValueType__c == ValueTypeDefault)}"> 
+											<div style="padding-left:5px;"><apex:outputText value="{!$Label.apttus_config2__SearchDefault}"/></div>
+										</apex:outputPanel>
+										<apex:outputPanel rendered="{!(lineItem.searchAttrSO.Apttus_Config2__ValueType__c == ValueTypeProduct)}">
+											<div style="padding-left:5px;"><apex:outputField value="{!lineItem.searchAttrSO.Apttus_Config2__BaseProductId__c}"></apex:outputField></div> 
+										</apex:outputPanel>
+									</apex:outputPanel>
+									<!-- Related Product Link -->	
+									<apex:outputPanel rendered="{!lineItem.isLineItem}">
+										<div style="padding-left:5px;">
+											<apex:outputField value="{!lineItem.lineItemSO.Apttus_Config2__ProductId__c}"  
+														 		style="font-size: 10px; font-weight: bold;" />
+											<apex:outputPanel rendered="{!IsAssetEnabled}">
+												<br/>
+												<div style="font-size: 10px; font-style: italic;">
+													(<apex:outputField value="{!lineItem.lineItemSO.Apttus_Config2__LineStatus__c}"/>)
+												</div>
+											</apex:outputPanel>				 		
+								 		</div>
+									</apex:outputPanel>				
+									<apex:outputPanel rendered="{!hasOrderStatusField1}">
+										<br/>
+										<div style="font-size: 10px; font-weight: bold; color: #0095DA; padding: 2px;">
+											<apex:outputField rendered="{!NOT(ISBLANK(OrderStatusField1Name))}" value="{!lineItem.lineItemSO[OrderStatusField1Name]}"/>
+										</div>
+									</apex:outputPanel>				
+								</apex:column>
+								
+								<!-- Column2 -->	        	 
+					        	<apex:column styleClass="aptSelectedProductColumn2" >
+									<apex:facet name="header">{!LineItemColumn2Label}</apex:facet>
+									<apex:outputPanel rendered="{!lineItem.isLineItem}">
+										<div class="{!IF(AND(NOT(ISBLANK(extraColumnName2)),contains(extraColumnName2, 'Quantity')), 'aptQuantity', '')}">
+											<apex:outputField rendered="{!NOT(ISBLANK(extraColumnName2))}" value="{!lineItem.lineItemSO[extraColumnName2]}"/>
+										</div>
+									</apex:outputPanel>				 
+									<apex:outputPanel rendered="{!hasOrderStatusField2}">
+										<br/>
+										<div style="font-size: 10px; font-weight: bold; color: red; padding: 2px;">
+											<apex:outputField rendered="{!NOT(ISBLANK(OrderStatusField2Name))}" value="{!lineItem.lineItemSO[OrderStatusField2Name]}"/>
+										</div>
+									</apex:outputPanel>				
+								</apex:column>													 
+								<!-- Column3 -->	         	 
+					        	<apex:column >
+									<apex:facet name="header">{!LineItemColumn3Label}</apex:facet>
+									<apex:outputPanel rendered="{!lineItem.isLineItem}">
+										<apex:outputField rendered="{!NOT(ISBLANK(extraColumnName3))}" value="{!lineItem.lineItemSO[extraColumnName3]}"/>
+									</apex:outputPanel>				 
+								</apex:column>													 
+								<!-- Column4 -->	        	 
+					        	<apex:column > 
+									<apex:facet name="header">{!LineItemColumn4Label}</apex:facet>
+									<apex:outputPanel rendered="{!lineItem.isLineItem}">
+										<apex:outputField rendered="{!NOT(ISBLANK(extraColumnName4))}" value="{!lineItem.lineItemSO[extraColumnName4]}"/>
+									</apex:outputPanel>				 
+								</apex:column>													 
+								<!-- End of Group By Search Attribute Value -->	
+								<!-- Net Price Column -->
+								<apex:column rendered="{!false && IsBypassShoppingCart}">
+									<apex:facet name="header">{!$ObjectType.Apttus_Config2__LineItem__c.Fields.Apttus_Config2__NetPrice__c.Label}</apex:facet>
+									<div class="aptCurrency" style="font-weight:bold;">
+										<apex:outputField value="{!lineItem.lineItemSO.Apttus_Config2__NetPrice__c}" />
+									</div>
+								</apex:column>														 
+	<!-- Remove Button or Guide Me Link -->				 
+								<apex:column style="width: 50px; max-width: 100px; white-space: nowrap; text-align: center;">
+									<apex:facet name="header">{!$Label.apttus_config2__Action}</apex:facet>
+									<apex:outputPanel rendered="{!lineItem.isSearchItem}">
+										<apex:outputPanel rendered="{!(lineItem.searchAttrSO.Apttus_Config2__ValueType__c == ValueTypeDefault)}"> 
+											<apex:commandLink value="{!$Label.apttus_config2__GuideMe}"
+																oncomplete="onActionComplete2();" 
+															    onclick="invokeGoToSearchDefault();" 
+																style="color: blue; white-space: nowrap;" >
+											</apex:commandLink>
+										</apex:outputPanel>
+										<apex:outputPanel rendered="{!(lineItem.searchAttrSO.Apttus_Config2__ValueType__c == ValueTypeProduct)}"> 
+											<apex:commandLink value="{!$Label.apttus_config2__GuideMe}"
+														    	oncomplete="onActionComplete2();" 
+															    onclick="invokeGoToSearch('{!lineItem.searchAttrSO.Apttus_Config2__BaseProductId__c}');" 
+																style="color:blue;">
+											</apex:commandLink>
+										</apex:outputPanel>
+									</apex:outputPanel>
+									<!-- Remove Product Links -->
+									<apex:outputPanel rendered="{!lineItem.isLineItem}">
+										<apex:PanelGrid columns="4" columnClasses="aptActionIcon">
+											<apex:outputPanel >
+		                                      <apex:image url="{!$Resource.Apttus_Config2__Image_ConfigStatusPending}" 
+		                                                        title="{!$Label.apttus_config2__PendingPriceUpdateHelpText}"
+		                                                        alt="{!$Label.apttus_config2__PendingPriceUpdateHelpText}"
+		                                                        rendered="{!(lineItem.lineItemSO.ConfigStatus__c == ConfigStatusPending || lineItem.lineItemSO.ConstraintCheckStatus__c == ConfigStatusPending) && 
+				                                              			isBypassShoppingCart && 
+				                                                      	(lineItem.lineItemSO.LineType__c == LineTypeProduct) && 
+				                                                      	(lineItem.lineItemSO.IsPrimaryLine__c) && 
+				                                                      	((lineItem.lineItemSO.hasAttributes__c) || 
+				                                                       (lineItem.lineItemSO.hasOptions__c))}" />
+		                                    </apex:outputPanel>
+		                                    <apex:outputPanel >
+												<apex:commandLink rendered="{!(lineItem.lineItemSO.Apttus_Config2__HasAttributes__c || lineItem.lineItemSO.Apttus_Config2__HasOptions__c) && NOT(HideConfigureAction)}"
+																	onclick="invokeDoConfigure('{!lineItem.lineItemSO.Id}'); return false;"
+																	status="idLineItemPageChangeStatus" 
+																	rerender="dummy">
+													<apex:image url="{!$Resource.Apttus_Config2__Image_Configure}" alt="{!$Label.apttus_config2__Configure}"/>			
+												</apex:commandLink>
+											</apex:outputPanel>
+											<apex:outputPanel >
+												<apex:commandLink onclick="j$.APTTUS.lineItemNumber = '{!lineItem.lineItemSO.Apttus_Config2__LineNumber__c}'; j$.APTTUS.showRemoveConfirmation('{!lineItem.lineItemSO.Apttus_Config2__LineNumber__c}');j$('.ui-dialog').click(function( event ) {event.stopPropagation();});return false;"
+																	rerender="dummy">
+													<apex:image url="{!$Resource.Apttus_Config2__Image_RemoveBlack}" alt="{!$Label.apttus_config2__Remove}"/>			
+												</apex:commandLink>
+											</apex:outputPanel>
+											<apex:outputPanel style="display:block; width:16px;" >
+		                                      <apex:image url="{!$Resource.Apttus_Config2__Image_LoadingPage}" 
+															style="display:none; width:16px; height:16px;"
+															styleClass="aptActionStatus-{!lineItem.lineItemSO.Apttus_Config2__LineNumber__c}"/>
+		                                    </apex:outputPanel>
+											
+										</apex:PanelGrid>	
+										
+									</apex:outputPanel>
+								</apex:column>									
+							</apex:dataTable>
+						</div>
+						<apex:outputPanel style="padding-left: 4px;">
+							<apex:outputText value="{!$Label.apttus_config2__NoRecordsToDisplay}"
+										 	rendered="{!NOT(lineItemPaging.hasDisplayLines)}" />
+						</apex:outputPanel>
+						
+					</apex:outputPanel>	
+				</apex:outputPanel>
+			</div>
+		</div>
+        
+        <!-- Totals Section -->
+        <apex:outputPanel layout="block" styleClass="apt-product-list-panel totalsTableContainer" rendered="{!IsBypassShoppingCart && IsTotalsDone}" >
+	        <div class="header collapsible" onclick="j$('.totalsTableContainer').slideToggle(400);">
+	            <h2>{!$Label.Totals}</h2>
+	        </div>
+	        <div style="overflow:auto;">
+	            <apex:dataTable width="100%" 
+	                                 value="{!CartTotalItems}" 
+	                                 var="totalInfo" 
+	                                 rules="rows" 
+	                                 styleClass="totalsTable apt-product-list-table"
+	                                 cellpadding="3px"
+	                                 >
+	                                 
+	               <apex:column headerValue="{!$ObjectType.Apttus_Config2__SummaryGroup__c.Fields.Name.Label}">
+	               	<div style="text-align: left;">
+	               		<apex:outputPanel rendered="{!totalInfo.isCategoryTotalGroup}">
+	               			<apex:outputField value="{!totalInfo.summaryGroupSO.Name}"/>
+	               		</apex:outputPanel>
+	               		<apex:outputPanel rendered="{!totalInfo.isGrandTotalGroup}">
+	               			<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__LineType__c}"/>
+	               		</apex:outputPanel>
+	               		<apex:outputPanel rendered="{!totalInfo.isSubtotalGroup}">
+	               			<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__LineType__c}"/>&nbsp;-&nbsp;<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__ChargeType__c}"/>
+	               			(<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__Frequency__c}"/>)
+	               		</apex:outputPanel>
+	               		<apex:outputPanel rendered="{!totalInfo.isTotalGroup}">
+	               			<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__LineType__c}"/>&nbsp;(<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__Frequency__c}"/>)
+	               		</apex:outputPanel>
+	               		<apex:outputPanel rendered="{!NOT(totalInfo.isSubtotalGroup)
+	               										&& NOT(totalInfo.isCategoryTotalGroup)
+	               										&& NOT(totalInfo.isGrandTotalGroup)
+	               										&& NOT(totalInfo.isTotalGroup)}">
+	               			<apex:outputField value="{!totalInfo.summaryGroupSO.Name}"/>&nbsp;-&nbsp;<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__ChargeType__c}"/>
+	               			(<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__Frequency__c}"/>)
+	               		</apex:outputPanel>
+	                   	
+	               	</div>    	
+	               </apex:column>
+	               <apex:column headerValue="{!$ObjectType.Apttus_Config2__SummaryGroup__c.Fields.Apttus_Config2__ChargeType__c.Label}" rendered="{!NOT(IsChargeTypeTotalingDisabled)}">
+	               	<div style="text-align: left;">
+	                   	<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__ChargeType__c}"/>
+	                 </div>  	
+	               </apex:column>
+	               <apex:column headerValue="{!$ObjectType.Apttus_Config2__SummaryGroup__c.Fields.Apttus_Config2__Frequency__c.Label}">
+	    	      	<div style="text-align: left;">
+	                   	<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__Frequency__c}"/>
+	                 </div>  	
+	               </apex:column>
+	               <apex:column headerValue="{!$ObjectType.Apttus_Config2__SummaryGroup__c.Fields.Apttus_Config2__NetPrice__c.Label}">
+		         	<div class="aptCurrency">
+	                   	<apex:outputField value="{!totalInfo.summaryGroupSO.Apttus_Config2__NetPrice__c}"/>
+	                </div>
+	               </apex:column>
+	                
+	            </apex:dataTable>
+	        </div>
+            <script>
+                if({!NOT(IsHideGrandTotal)}){
+                	j$('.totalsTable tr:last').addClass('totalsLastRow');
+                
+                } 
+            </script>
+            <apex:outputText value="{!$Label.apttus_config2__NoRecordsToDisplay}"
+        					style="padding-left: 4px;"
+							rendered="{!NOT(IsTotalsDone)}" />
+        </apex:outputPanel>
+        <div style="clear: both; width: 100%; text-align: center; padding-top: 5px;">
+			<apex:outputPanel layout="none" id="idButtonsPanel">
+				<div style="display:none;">
+					<img class="aptMiniCartSpinner" src="/img/loading.gif"/>
+				</div>
+				<apex:commandLink value="{!$Label.apttus_config2__GoToPricing}" 
+						onclick="invokeDoViewCart();startSpinner('.aptMiniCartSpinner', this); return false;" 
+						immediate="true"
+					    styleClass="aptListButton"
+					    reRender="idErrorMsg, idRulesBlock, idButtonsPanel" 
+					    rendered="{!NOT(IsBypassShoppingCart) && lineItemPaging.hasDisplayLines && isActionGoToPricingEnabled}" /> 
+				<apex:commandLink value="{!$Label.apttus_config2__UpdatePrice}"
+						onclick="doPricePendingLineItems({!contextLineNumber});startSpinner('.aptMiniCartSpinner', this);return false;"
+						styleClass="aptListButton"
+						reRender="dummy, idButtonsPanel"
+						rendered="{!IsBypassShoppingCart && lineItemPaging.hasDisplayLines && isActionUpdatePriceEnabled}"/>
+			</apex:outputPanel>
+		</div>
+        
+		<script>
+			j$.APTTUS.formatFields("{!currencyFieldPrecision}", "{!percentageFieldPrecision}", "{!quantityFieldPrecision}");
+				
+        	function aptUpdateCartQuantity(){
+				//cart line item count
+				var aptCartLineItemCount;
+				
+				//if count is undefined or empty
+				if(j$('#aptCartItemCount').html() == '' || !j$('#aptCartItemCount').html()){
+					aptCartLineItemCount = 0;
+				}else{
+					aptCartLineItemCount = j$('#aptCartItemCount').html();
+				}
+				
+				//set cart line item count in header
+				j$('#aptAddCartItemCount').html(aptCartLineItemCount);
+			}
+			j$(function() {
+				aptUpdateCartQuantity();
+			
+			});
+        
+		</script>
+		<apex:actionRegion >
+			<apex:actionFunction name="invokeGetFirstLineItemPage"
+								rerender="idSelectedProductsBlock"
+								status="idLineItemPageChangeStatus"
+								action="{!firstLineItemPage}">
+			</apex:actionFunction>
+			<apex:actionFunction name="invokeGetPreviousLineItemPage"
+								rerender="idSelectedProductsBlock"
+								status="idLineItemPageChangeStatus"
+								action="{!previousLineItemPage}">
+			</apex:actionFunction>
+			<apex:actionFunction name="invokeGetNextLineItemPage"
+								rerender="idSelectedProductsBlock"
+								status="idLineItemPageChangeStatus"
+								action="{!nextLineItemPage}">
+			</apex:actionFunction>
+			<apex:actionFunction name="invokeGetLastLineItemPage"
+								rerender="idSelectedProductsBlock"
+								status="idLineItemPageChangeStatus"
+								action="{!lastLineItemPage}">
+			</apex:actionFunction>
+		</apex:actionRegion>
+   
+</apex:component>

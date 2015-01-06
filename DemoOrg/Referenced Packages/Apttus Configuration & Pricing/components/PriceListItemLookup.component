@@ -1,0 +1,140 @@
+<!-- 
+    Apttus Config & Pricing
+    PriceListItemLookup
+     
+    @2012-2013 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.PriceListItemLookupController" allowDML="true" >	
+    
+    <!--  page controller - specify page controller associated with the component. The page controller is
+	used to locate the select controller to delegate the select and cancel actions to. 
+	-->	
+	<apex:attribute name="pageController" 
+					description="Page Controller" 
+					type="Apttus_Config2.PageControllerBase" 
+					required="true" 
+					assignTo="{!pageControllerProp}" />
+	
+	<!--  priceListId - specify here or provide as a parameter to the component. -->
+	<apex:attribute name="priceListId" 
+					description="Price List Id" 
+					type="ID" 
+					required="true" 
+					assignTo="{!PriceListIdProp}" />
+									
+	<!--  autoSearch - specify here or provide as a parameter to the component. -->
+	<apex:attribute name="autoSearch" 
+					description="Auto Search Indicator" 
+					type="Boolean" 
+					required="false" 
+					default="true" 
+					assignTo="{!autoSearchProp}" />
+									
+	<style>
+	
+		.searchField {
+		    float:left; 
+		    width:300px; 
+		    height:27px; 
+		    line-height:27px;
+		    text-indent:10px; 
+		    font-family:arial, sans-serif; 
+		    font-size:1em; 
+		    color:#333; 
+		    background: #fff; 
+		    border:solid 1px #d9d9d9; 
+		    border-top:solid 1px #c0c0c0; 
+		    border-right:none;
+		}
+		
+	</style>	
+	
+	<script type="text/javascript">
+    	
+		// function to handle the enter key
+		function noenter(ev)  {
+		   	if (window.event && (window.event.keyCode == 13 || ev.which == 13)) {
+		   		doSearch();
+		       	return false;
+		       	
+		     } else {
+		          return true;
+		          
+		     }
+		     
+		}
+		
+    </script>
+    																
+	<apex:pageBlock id="idSearchResultBlock" mode="detail" rendered="{!isEnabled}" >
+		<apex:pageMessages />
+		
+		<apex:pageBlockButtons location="both">
+			<apex:commandButton value="{!$Label.apttus_config2__Cancel}" 
+	        					action="{!doCancel}" 
+	        					styleClass="aptListButton"
+	        					immediate="true" />
+	        					
+	        <apex:commandButton value="{!$Label.apttus_config2__Ok}" 
+	        					action="{!doOk}"
+	        					styleClass="aptListButton" />
+	    </apex:pageBlockButtons>
+	    
+	    <apex:outputText value="{!$Label.apttus_config2__SearchProductInstruction}" /> <p/>
+		    
+	     <apex:outputPanel layout="block">
+	    	<apex:inputText value="{!searchText}" 
+	    					styleClass="searchField" 
+	    					onkeypress="return noenter(event);" />
+	    	<apex:commandButton action="{!doSearch}" 
+	    						reRender="idSearchResultBlock" 
+	    						status="idSearchStatus" 
+	    						style="line-height:0;font-size:0;text-indent:-999px;color: transparent;background-color:#4d90fe;background-image:url({!URLFOR($Resource.Apttus_Config2__GraphicsLib, 'small/search.png')});height:31px;width:70px;border-width:0px;background-repeat:no-repeat;background-position:center;border: 1px solid #3079ED;cursor:pointer;"/>
+			
+			<apex:actionStatus id="idSearchStatus" >
+              	<apex:facet name="start">
+                   	<img src="/img/loading.gif"/>
+                </apex:facet>
+                <apex:facet name="stop" />		                             
+           	</apex:actionStatus>
+            <p/>         	
+	    </apex:outputPanel>
+			
+	    <apex:pageBlockSection id="idResultSetSection" 
+	    					   title="Search Results"  
+	    					   columns="2" 
+	    					   collapsible="false" >
+		    
+		    <apex:outputText value="{!StatusText}" style="color: red;" /> <p/>
+		    					   
+	        <apex:pageBlockTable value="{!PriceItems}" 
+	        					 var="itemInfo" 
+	        					 rowClasses="oddRow,evenRow" 
+	        					 width="100%"
+	        					 rendered="{!HasPriceItems}" >
+	        	
+	        	<apex:column >
+					<apex:inputCheckbox value="{!itemInfo.selected}" />
+				</apex:column>
+				
+				<!--  Price Items Result Field Set  -->
+				<apex:repeat value="{!ResultFields}" 
+							 var="fd">
+					<apex:column value="{!itemInfo.ItemSO[fd.member.FieldPath]}" />
+					
+				</apex:repeat>	   
+							
+	        </apex:pageBlockTable>
+	        
+	        <apex:outputText value="{!$Label.apttus_config2__NoRecordsToDisplay}" rendered="{!NOT(HasPriceItems)}" />
+	    </apex:pageBlockSection>
+		
+	</apex:pageBlock>
+	
+	<apex:actionFunction name="doSearch" 
+							 action="{!doSearch}" 
+							 reRender="idSearchResultBlock" 
+		    				 status="idSearchStatus" />
+		    				 
+</apex:component>

@@ -1,0 +1,880 @@
+<!-- 
+    Apttus Config & Pricing
+    PriceRuleList
+     
+    @2010-2013 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.PriceRuleListController" >	
+    <!--  price ruleset id - specify the id of the price ruleset associated with the rule. -->
+    <apex:attribute name="rulesetMO" 
+    				description="Price Ruleset" 
+    				type="Apttus_Config2.PriceRuleset" 
+    				required="true" 
+    				assignTo="{!rulesetMOProp}" />
+	
+	<!--  page controller - specify page controller associated with the component. -->	
+	<apex:attribute name="pageController" 
+					description="Page Controller" 
+					type="Apttus_Config2.PageControllerBase" 
+					required="true" 
+					assignTo="{!pageControllerProp}" />
+					
+ 	<apex:stylesheet value="{!$Resource.Apttus_Config2__ConfigStyles}" />
+	
+	<apex:pageBlock id="idPriceRuleBlock" mode="edit" rendered="{!isEnabled && NOT(isCriteriaEditMode)}" >
+			<apex:pageBlockButtons location="top" rendered="{!NOT(isFilterEditMode)}" >	
+				
+		    	<apex:commandButton value="{!$Label.apttus_config2__New}"  
+		        					action="{!doAddRuleRow}"  
+		        					rendered="{!NOT(isRuleEditMode)}" 
+		        					reRender="idPriceRuleBlock" />
+		    </apex:pageBlockButtons>
+			
+			<apex:pageBlockSection id="idPriceRuleListSection" 
+		    					   title="{!$ObjectType.Apttus_Config2__PriceRule__c.LabelPlural}"  
+		    					   columns="2" 
+		    					   collapsible="false" 
+		    					   rendered="{!NOT(isRuleEditMode)}" >
+		    					   
+		        <apex:pageBlockTable value="{!rules}" 
+		        					 var="ruleInfo" 
+		        					 columns="12" 
+		        					 rowClasses="oddRow,evenRow" 
+		        					 width="100%"
+		        					 rendered="{!hasRules}" >
+		        	
+		        	<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__Sequence__c.Label}" 
+		        				 width="5%" >
+		        		<apex:outputField value="{!ruleInfo.ruleSO.Apttus_Config2__Sequence__c}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Name.Label}" >
+		        		<apex:inputField value="{!ruleInfo.ruleSO.Name}" 
+		        						 rendered="{!NOT(isRuleEditMode)}" />
+		        		<apex:outputField value="{!ruleInfo.ruleSO.Name}" 
+		        						  rendered="{!isRuleEditMode}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__RuleType__c.Label}" >
+		        		<apex:outputField value="{!ruleInfo.ruleSO.Apttus_Config2__RuleType__c}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__AdjustmentAppliesTo__c.Label}" >
+		        		<apex:inputField value="{!ruleInfo.ruleSO.Apttus_Config2__AdjustmentAppliesTo__c}" 
+		        						 rendered="{!NOT(isRuleEditMode)}" />
+		        		<apex:outputField value="{!ruleInfo.ruleSO.Apttus_Config2__AdjustmentAppliesTo__c}" 
+		        						  rendered="{!isRuleEditMode}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__AdjustmentChargeType__c.Label}" >
+		        		<apex:inputField value="{!ruleInfo.ruleSO.Apttus_Config2__AdjustmentChargeType__c}" 
+		        						 rendered="{!NOT(isRuleEditMode)}" />
+		        		<apex:outputField value="{!ruleInfo.ruleSO.Apttus_Config2__AdjustmentChargeType__c}" 
+		        						  rendered="{!isRuleEditMode}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__AllowableAction__c.Label}" >
+		        		<apex:inputField value="{!ruleInfo.ruleSO.Apttus_Config2__AllowableAction__c}" 
+		        						 rendered="{!NOT(isRuleEditMode)}" />
+		        		<apex:outputField value="{!ruleInfo.ruleSO.Apttus_Config2__AllowableAction__c}" 
+		        						  rendered="{!isRuleEditMode}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__Active__c.Label}" >
+		        		<apex:inputField value="{!ruleInfo.ruleSO.Apttus_Config2__Active__c}" 
+		        						 rendered="{!NOT(isRuleEditMode)}" />
+		        		<apex:outputField value="{!ruleInfo.ruleSO.Apttus_Config2__Active__c}" 
+		        						  rendered="{!isRuleEditMode}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__StopProcessingMoreRules__c.Label}" >
+		        		<apex:inputField value="{!ruleInfo.ruleSO.Apttus_Config2__StopProcessingMoreRules__c}" 
+		        						 rendered="{!NOT(isRuleEditMode)}" />
+		        		<apex:outputField value="{!ruleInfo.ruleSO.Apttus_Config2__StopProcessingMoreRules__c}" 
+		        						  rendered="{!isRuleEditMode}" />
+					</apex:column>
+					
+					<apex:column width="5%" >
+						<apex:commandLink action="{!doEditRuleRow}" 
+								  	  	  value="{!$Label.apttus_config2__Edit}" 
+								  	  	  reRender="idPriceRuleBlock" 
+									  	  rendered="{!NOT(isRuleEditMode)}" >
+							<apex:param name="rowNum" value="{!ruleInfo.ruleSO.Apttus_Config2__Sequence__c}" />				  	  	  
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+					<apex:column width="5%" >
+				    	<apex:commandLink action="{!doAddRuleRow}" 
+								  	  	  reRender="idPriceRuleBlock" 
+									  	  rendered="{!NOT(isRuleEditMode)}" >
+							<apex:param name="rowNum" value="{!ruleInfo.ruleSO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Plus2}" 
+				                       	title="{!$Label.apttus_config2__Add}" 
+				                       	alt="{!$Label.apttus_config2__Add}" /> 					  	  	  
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+				   	<apex:column width="5%" >
+					   	<apex:commandLink action="{!doDeleteRuleRow}" 
+									  	  reRender="idPriceRuleBlock" 
+									  	  rendered="{!NOT(isRuleEditMode)}" >
+							<apex:param name="rowNum" value="{!ruleInfo.ruleSO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Minus2}" 
+			                    		title="{!$Label.apttus_config2__Remove}" 
+			                    		alt="{!$Label.apttus_config2__Remove}" />		  
+						</apex:commandLink>
+					</apex:column>
+					<apex:column width="5%" >
+				   		<apex:commandLink action="{!doMoveUpRuleRow}" 
+								  	  	  reRender="idPriceRuleBlock" 
+								  	  	  rendered="{!NOT(isRuleEditMode) && ruleInfo.ruleSO.Apttus_Config2__Sequence__c > 1}" >
+							<apex:param name="rowNum" value="{!ruleInfo.ruleSO.Apttus_Config2__Sequence__c}" />		
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveUp}" 
+	                       				title="{!$Label.apttus_config2__MoveUp}" 
+	                       				alt="{!$Label.apttus_config2__MoveUp}" />
+						</apex:commandLink>
+						<apex:commandLink action="{!doMoveDownRuleRow}" 
+								  	  	  reRender="idPriceRuleBlock" 
+								  	  	  rendered="{!NOT(isRuleEditMode) && ruleInfo.ruleSO.Apttus_Config2__Sequence__c < lastRuleRowSequence}" >
+							<apex:param name="rowNum" value="{!ruleInfo.ruleSO.Apttus_Config2__Sequence__c}" />	
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveDown}" 
+	                       				title="{!$Label.apttus_config2__MoveDown}" 
+	                       				alt="{!$Label.apttus_config2__MoveDown}" />
+						</apex:commandLink>
+				   	</apex:column>
+				    
+		        </apex:pageBlockTable>
+		        
+		        <apex:outputText value="{!$Label.apttus_config2__NoRecordsToDisplay}" rendered="{!NOT(hasRules)}" />
+		    </apex:pageBlockSection>
+	    	
+	    	<apex:outputPanel layout="block" styleClass="tabLink" rendered="{!isRuleEditMode && NOT(isFilterEditMode)}" >
+				<apex:outputPanel rendered="{!currentRule.isDisplaySummaryMode}" >&lt;{!$Label.Summary}</apex:outputPanel>
+				<apex:commandLink rendered="{!currentRule.isDisplayDetailMode}" action="{!currentRule.doToggleMode}" reRender="idPriceRuleBlock">&lt;{!$Label.Summary}</apex:commandLink>
+				<span> | </span>
+				<apex:outputPanel rendered="{!currentRule.isDisplayDetailMode}" >{!$Label.apttus_config2__Detail}</apex:outputPanel>
+				<apex:commandLink rendered="{!currentRule.isDisplaySummaryMode}" action="{!currentRule.doToggleMode}" reRender="idPriceRuleBlock">{!$Label.apttus_config2__Detail}</apex:commandLink>
+				<span> | </span>
+				<apex:commandLink action="{!doEditRuleRowClose}" reRender="idPriceRuleBlock">{!$Label.Close}&gt;</apex:commandLink>
+			</apex:outputPanel>
+			
+			<apex:pageBlockSection id="idPriceRuleDetailSection" 
+		    					   title="{!'Rule ' & $Label.apttus_config2__Information}"  
+		    					   columns="2" 
+		    					   collapsible="false" 
+		    					   rendered="{!hasRules && isRuleEditMode && currentRule.isDisplayDetailMode}" >
+		    	
+		    	<apex:outputField value="{!currentRule.ruleSO.Name}" />
+		    	<apex:pageBlockSectionItem />
+		    	
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Sequence__c}" />
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__RulesetId__c}" />
+		    	
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__RuleType__c}" />
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__InitialRows__c}" />
+		    	
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension1Id__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule}" />
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension1ValueType__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule}" />
+		    					  
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension2Id__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension2Id__c))}" />
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension2ValueType__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension2Id__c))}" /> 
+		    					  
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension3Id__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension3Id__c))}" />
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension3ValueType__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension3Id__c))}" />
+		    					  
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension4Id__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension4Id__c))}" />
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension4ValueType__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension4Id__c))}" />
+		    					  
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension5Id__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension5Id__c))}" />
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension5ValueType__c}" 
+								  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension5Id__c))}" />
+								  
+				<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension6Id__c}" 
+		    					  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension6Id__c))}" />
+			  	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension6ValueType__c}" 
+								  rendered="{!currentRule.isDimensionBasedRule && NOT(ISBLANK(currentRule.ruleSO.Apttus_Config2__Dimension6Id__c))}" />
+				
+				<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__AdjustmentAppliesTo__c}" />
+				<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__AllowableAction__c}" />
+				
+				<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__AdjustmentChargeType__c}" />
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__AllowRemovalOfAdjustment__c.Label}" 
+			    					  for="idAllowRemovalOfAdjustment" />
+					<apex:inputCheckbox id="idAllowRemovalOfAdjustment" 
+										value="{!currentRule.ruleSO.Apttus_Config2__AllowRemovalOfAdjustment__c}" 
+	        							selected="{!currentRule.ruleSO.Apttus_Config2__AllowRemovalOfAdjustment__c}" 
+	        							disabled="true" />	
+				</apex:pageBlockSectionItem>
+				
+				<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__StopProcessingMoreRules__c}" />
+				<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Description__c}"/>
+				
+				<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Active__c}" />
+									   
+		    </apex:pageBlockSection>
+		    
+			<apex:pageBlockSection id="idPriceRuleHeaderSection" 
+		    					   title="{!'Rule ' & $Label.apttus_config2__Edit}"  
+		    					   columns="2" 
+		    					   collapsible="false" 
+		    					   rendered="{!hasRules && isRuleEditMode && currentRule.isDisplaySummaryMode}" >
+		    	
+		    	<apex:pageMessages rendered="{!currentRule.hasErrors}" />
+		    	<apex:pageBlockSectionItem rendered="{!currentRule.hasErrors}" />
+		    	
+		    	<apex:inputField value="{!currentRule.ruleSO.Name}" />
+		    	<apex:pageBlockSectionItem />
+		    	
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__Sequence__c}" />
+				<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__RulesetId__c}" />
+				
+		    	<apex:pageBlockSectionItem >
+			    	<apex:outputLabel value="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__RuleType__c.Label}" 
+			    					  for="idRuleType" />
+			    	<apex:outputPanel styleClass="requiredInput" layout="block">
+	   					<apex:outputPanel styleClass="requiredBlock" layout="block"/>
+				    	<apex:selectList id="idRuleType" 
+				    					 size="1" 
+				    					 value="{!currentRule.ruleSO.Apttus_Config2__RuleType__c}" 
+				    					 multiselect="false" 
+		  								 required="true" >
+				      		<apex:selectOptions value="{!ruleTypeItems}" />
+				      		<apex:actionSupport event="onchange" reRender="idPriceRuleHeaderSection" />
+				      	</apex:selectList>
+				     </apex:outputPanel>
+				</apex:pageBlockSectionItem>
+				<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__InitialRows__c}" rendered="{!NOT(currentRule.hasRuleEntries)}" />
+		    	<apex:outputField value="{!currentRule.ruleSO.Apttus_Config2__InitialRows__c}" rendered="{!currentRule.hasRuleEntries}" />
+		    	
+		    	<apex:pageBlockSectionItem rendered="{!currentRule.isDimensionBasedRule}" >
+			    	<apex:outputLabel value="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__Dimension1Id__c.Label}" 
+			    					  for="idDimension1Id" />
+			    	<apex:selectList id="idDimension1Id" size="1" value="{!currentRule.ruleSO.Apttus_Config2__Dimension1Id__c}" >
+			      		<apex:selectOptions value="{!priceDimensionItems}" />
+			      	</apex:selectList>
+				</apex:pageBlockSectionItem>
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension1ValueType__c}" 
+		    					 rendered="{!currentRule.isDimensionBasedRule}" />
+		    					 
+		    	<apex:pageBlockSectionItem rendered="{!currentRule.isDimensionBasedRule}" >
+			    	<apex:outputLabel value="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__Dimension2Id__c.Label}" 
+			    					  for="idDimension2Id" />
+			    	<apex:selectList id="idDimension2Id" size="1" value="{!currentRule.ruleSO.Apttus_Config2__Dimension2Id__c}" >
+			      		<apex:selectOptions value="{!priceDimensionItems}" />
+			      	</apex:selectList>
+				</apex:pageBlockSectionItem>	 
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension2ValueType__c}" 
+		    					 rendered="{!currentRule.isDimensionBasedRule}" />
+		    					 
+		    	<apex:pageBlockSectionItem rendered="{!currentRule.isDimensionBasedRule}" >
+			    	<apex:outputLabel value="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__Dimension3Id__c.Label}" 
+			    					  for="idDimension3Id" />
+			    	<apex:selectList id="idDimension3Id" size="1" value="{!currentRule.ruleSO.Apttus_Config2__Dimension3Id__c}" >
+			      		<apex:selectOptions value="{!priceDimensionItems}" />
+			      	</apex:selectList>
+				</apex:pageBlockSectionItem>	
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension3ValueType__c}" 
+		    					 rendered="{!currentRule.isDimensionBasedRule}" />
+		    					 
+		    	<apex:pageBlockSectionItem rendered="{!currentRule.isDimensionBasedRule}" >
+			    	<apex:outputLabel value="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__Dimension4Id__c.Label}" 
+			    					  for="idDimension4Id" />
+			    	<apex:selectList id="idDimension4Id" size="1" value="{!currentRule.ruleSO.Apttus_Config2__Dimension4Id__c}" >
+			      		<apex:selectOptions value="{!priceDimensionItems}" />
+			      	</apex:selectList>
+				</apex:pageBlockSectionItem>	
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension4ValueType__c}" 
+		    					 rendered="{!currentRule.isDimensionBasedRule}" />
+		    					 
+		    	<apex:pageBlockSectionItem rendered="{!currentRule.isDimensionBasedRule}" >
+			    	<apex:outputLabel value="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__Dimension5Id__c.Label}" 
+			    					  for="idDimension5Id" />
+			    	<apex:selectList id="idDimension5Id" size="1" value="{!currentRule.ruleSO.Apttus_Config2__Dimension5Id__c}" >
+			      		<apex:selectOptions value="{!priceDimensionItems}" />
+			      	</apex:selectList>
+				</apex:pageBlockSectionItem>	
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension5ValueType__c}" 
+		    					 rendered="{!currentRule.isDimensionBasedRule}" />
+		    					 
+		    	<apex:pageBlockSectionItem rendered="{!currentRule.isDimensionBasedRule}" >
+			    	<apex:outputLabel value="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__Dimension6Id__c.Label}" 
+			    					  for="idDimension6Id" />
+			    	<apex:selectList id="idDimension6Id" size="1" value="{!currentRule.ruleSO.Apttus_Config2__Dimension6Id__c}" >
+			      		<apex:selectOptions value="{!priceDimensionItems}" />
+			      	</apex:selectList>
+				</apex:pageBlockSectionItem>	
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__Dimension6ValueType__c}" 
+		    					 rendered="{!currentRule.isDimensionBasedRule}" />
+		    	
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__AdjustmentAppliesTo__c}" />
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__AllowableAction__c}" />	
+		    	
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__AdjustmentChargeType__c}" />	
+		    	<apex:pageBlockSectionItem >
+					<apex:outputLabel value="{!$ObjectType.Apttus_Config2__PriceRule__c.Fields.Apttus_Config2__AllowRemovalOfAdjustment__c.Label}" 
+			    					  for="idAllowRemovalOfAdjustment" />
+					<apex:inputCheckbox id="idAllowRemovalOfAdjustment" 
+										value="{!currentRule.ruleSO.Apttus_Config2__AllowRemovalOfAdjustment__c}" 
+	        							selected="{!currentRule.ruleSO.Apttus_Config2__AllowRemovalOfAdjustment__c}" />	
+				</apex:pageBlockSectionItem>
+		    	
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__StopProcessingMoreRules__c}" />
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__Description__c}"/>
+		    	
+		    	<apex:inputField value="{!currentRule.ruleSO.Apttus_Config2__Active__c}" />	
+		    		 					   
+		    </apex:pageBlockSection>
+		    
+		    <apex:pageBlockSection id="idPriceRuleEntriesSection" 
+		    					   title="{!'Rule Entries ' & $Label.apttus_config2__Edit}"  
+		    					   columns="2" 
+		    					   collapsible="false"
+		    					   rendered="{!hasRules && isRuleEditMode && currentRule.isDisplayDetailMode}" >
+		    					   
+		        <apex:pageBlockTable value="{!currentRule.ruleEntries}" 
+		        					 var="entryInfo" 
+		        					 columns="16" 
+		        					 rowClasses="oddRow,evenRow" 
+		        					 rendered="{!currentRule.isDimensionBasedRule && currentRule.isDimension1Enabled}" >
+		        	
+		        	<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__Sequence__c.Label}" 
+		        				 width="5%" >
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+					</apex:column>
+					
+		        	<apex:column headerValue="{!currentRule.dimension1Label}" 
+		        				 width="10%" >
+		        		<apex:outputPanel styleClass="{!IF(entryInfo.Dim1InError, 'errorRow', '')}" layout="block" >
+		        			<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__Dimension1Value__c}" 
+		        							 rendered="{!NOT(currentRule.isDimension1Picklist)}" />
+		        			<apex:selectList value="{!entryInfo.entrySO.Apttus_Config2__Dimension1Value__c}" 
+	  										 multiselect="false" 
+	  										 required="false" 
+	  										 size="1" 
+	  										 rendered="{!currentRule.isDimension1Picklist}" >
+								<apex:selectOptions value="{!currentRule.dimension1PicklistItems}" />
+							</apex:selectList>
+						</apex:outputPanel>
+					</apex:column>
+					
+					<apex:column headerValue="{!currentRule.dimension2Label}" 
+								 width="10%" 
+								 rendered="{!currentRule.isDimension2Enabled}" >
+		        		<apex:outputPanel styleClass="{!IF(entryInfo.Dim2InError, 'errorRow', '')}" layout="block" >
+		        			<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__Dimension2Value__c}" 
+		        							 rendered="{!NOT(currentRule.isDimension2Picklist)}" />
+		        			<apex:selectList value="{!entryInfo.entrySO.Apttus_Config2__Dimension2Value__c}" 
+	  										 multiselect="false" 
+	  										 required="false" 
+	  										 size="1" 
+	  										 rendered="{!currentRule.isDimension2Picklist}" >
+								<apex:selectOptions value="{!currentRule.dimension2PicklistItems}" />
+							</apex:selectList>
+						</apex:outputPanel>
+					</apex:column>
+					
+			   		<apex:column headerValue="{!currentRule.dimension3Label}" 
+			   					 width="10%" 
+			   					 rendered="{!currentRule.isDimension3Enabled}" >
+		        		<apex:outputPanel styleClass="{!IF(entryInfo.Dim3InError, 'errorRow', '')}" layout="block" >
+		        			<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__Dimension3Value__c}" 
+		        							 rendered="{!NOT(currentRule.isDimension3Picklist)}" />
+		        			<apex:selectList value="{!entryInfo.entrySO.Apttus_Config2__Dimension3Value__c}" 
+	  										 multiselect="false" 
+	  										 required="false" 
+	  										 size="1" 
+	  										 rendered="{!currentRule.isDimension3Picklist}" >
+								<apex:selectOptions value="{!currentRule.dimension3PicklistItems}" />
+							</apex:selectList>
+						</apex:outputPanel>
+					</apex:column>
+					
+					<apex:column headerValue="{!currentRule.dimension4Label}" 
+								 width="10%" 
+								 rendered="{!currentRule.isDimension4Enabled}" >
+		        		<apex:outputPanel styleClass="{!IF(entryInfo.Dim4InError, 'errorRow', '')}" layout="block" >
+		        			<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__Dimension4Value__c}" 
+		        							 rendered="{!NOT(currentRule.isDimension4Picklist)}" />
+		        			<apex:selectList value="{!entryInfo.entrySO.Apttus_Config2__Dimension4Value__c}" 
+	  										 multiselect="false" 
+	  										 required="false" 
+	  										 size="1" 
+	  										 rendered="{!currentRule.isDimension4Picklist}" >
+								<apex:selectOptions value="{!currentRule.dimension4PicklistItems}" />
+							</apex:selectList>
+						</apex:outputPanel>
+					</apex:column>
+					
+					<apex:column headerValue="{!currentRule.dimension5Label}" 
+								 width="10%" 
+								 rendered="{!currentRule.isDimension5Enabled}" >
+		        		<apex:outputPanel styleClass="{!IF(entryInfo.Dim5InError, 'errorRow', '')}" layout="block" >
+		        			<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__Dimension5Value__c}" 
+		        							 rendered="{!NOT(currentRule.isDimension5Picklist)}" />
+		        			<apex:selectList value="{!entryInfo.entrySO.Apttus_Config2__Dimension5Value__c}" 
+	  										 multiselect="false" 
+	  										 required="false" 
+	  										 size="1" 
+	  										 rendered="{!currentRule.isDimension5Picklist}" >
+								<apex:selectOptions value="{!currentRule.dimension5PicklistItems}" />
+							</apex:selectList>
+						</apex:outputPanel>
+					</apex:column>
+					
+					<apex:column headerValue="{!currentRule.dimension6Label}" 
+								 width="10%" 
+								 rendered="{!currentRule.isDimension6Enabled}" >
+		        		<apex:outputPanel styleClass="{!IF(entryInfo.Dim6InError, 'errorRow', '')}" layout="block" >
+		        			<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__Dimension6Value__c}" 
+		        							 rendered="{!NOT(currentRule.isDimension6Picklist)}" />
+		        			<apex:selectList value="{!entryInfo.entrySO.Apttus_Config2__Dimension6Value__c}" 
+	  										 multiselect="false" 
+	  										 required="false" 
+	  										 size="1" 
+	  										 rendered="{!currentRule.isDimension6Picklist}" >
+								<apex:selectOptions value="{!currentRule.dimension6PicklistItems}" />
+							</apex:selectList>
+						</apex:outputPanel>
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__AdjustmentAmount__c.Label}" 
+								 width="10%" 
+								 rendered="{!NOT(currentRule.HasWeightedRangeDimension)}" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentAmount__c}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__AdjustmentType__c.Label}" 
+								 width="5%" 
+								 rendered="{!NOT(currentRule.HasWeightedRangeDimension)}" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentType__c}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__StartFactor__c.Label}" 
+								 width="5%" 
+								 rendered="{!currentRule.HasWeightedRangeDimension}" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__StartFactor__c}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__EndFactor__c.Label}" 
+								 width="5%" 
+								 rendered="{!currentRule.HasWeightedRangeDimension}" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__EndFactor__c}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__BandSize__c.Label}" 
+								 width="5%" 
+								 rendered="{!currentRule.HasWeightedRangeDimension}" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__BandSize__c}" />
+					</apex:column>
+					
+				   	<apex:column width="5%" >
+				    	<apex:commandLink action="{!currentRule.doAddRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Plus2}" 
+				                       	title="{!$Label.apttus_config2__Add}" 
+				                       	alt="{!$Label.apttus_config2__Add}" />		  	  	  
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+				   	<apex:column width="5%" >
+					   	<apex:commandLink action="{!currentRule.doDeleteRow}" 
+									  	  reRender="idPriceRuleEntriesSection" 
+									  	  rendered="{!entryInfo.entrySO.Apttus_Config2__Sequence__c > 1}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Minus2}" 
+			                    		title="{!$Label.apttus_config2__Remove}" 
+			                    		alt="{!$Label.apttus_config2__Remove}" />		  
+						</apex:commandLink>
+					</apex:column>
+					
+					<apex:column width="5%" >
+				   		<apex:commandLink action="{!currentRule.doMoveUpRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!entryInfo.entrySO.Apttus_Config2__Sequence__c > 1}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveUp}" 
+	                       				title="{!$Label.apttus_config2__MoveUp}" 
+	                       				alt="{!$Label.apttus_config2__MoveUp}" />
+						</apex:commandLink>
+						<apex:commandLink action="{!currentRule.doMoveDownRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!entryInfo.entrySO.Apttus_Config2__Sequence__c < currentRule.lastRowSequence}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveDown}" 
+	                       				title="{!$Label.apttus_config2__MoveDown}" 
+	                       				alt="{!$Label.apttus_config2__MoveDown}" />
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+				   	<apex:column width="5%" >
+				   		<apex:outputText value="{!entryInfo.ErrorMsg}" style="color:red;" />
+				   	</apex:column>
+				   
+		        </apex:pageBlockTable>
+		        
+		        <apex:pageBlockTable value="{!currentRule.ruleEntries}" 
+		        					 var="entryInfo" 
+		        					 columns="11" 
+		        					 rowClasses="oddRow,evenRow" 
+		        					 rendered="{!currentRule.isConditionBasedRule}" >
+		        	
+		        	<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__Sequence__c.Label}" 
+		        				 width="5%" >
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" 
+		        						  rendered="{!NOT(isFilterEditMode) || (entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum)}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__Condition__c.Label}" 
+								 width="40%" 
+								 rendered="{!currentRule.isConditionBasedRule}" >
+		        		<apex:outputPanel styleClass="{!IF((entryInfo.ConditionInError || entryInfo.entrySO.Apttus_Config2__Sequence__c == currentRule.filterRowNum), 'errorRow', '')}" 
+		        						  layout="block" 
+		        						  rendered="{!NOT(isFilterEditMode) || (entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum)}" >
+		        			<apex:inputText value="{!entryInfo.conditionExpr}"  
+		        							size="100"
+		        							style="font-weight: bold;"
+	        								disabled="true" 
+	        								title="{!entryInfo.conditionExpr}" />
+						</apex:outputPanel>
+					</apex:column>
+					
+					<apex:column width="5%" >
+						<apex:commandLink action="{!doEditFilter}" 
+				    					  value="{!$Label.apttus_config2__New}" 
+				    					  rendered="{!NOT(isFilterEditMode) && LEN(entryInfo.conditionExpr) == 0}" >
+				    		<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />			  
+				    	</apex:commandLink>
+				    	<apex:commandLink action="{!doEditFilter}" 
+				    					  value="{!$Label.apttus_config2__Edit}" 
+				    					  rendered="{!NOT(isFilterEditMode) && LEN(entryInfo.conditionExpr) > 0}" >
+				    		<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />			  
+				    	</apex:commandLink>
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__MatchProductGroupId__c.Label}" 
+								 width="10%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__MatchProductGroupId__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__MatchProductGroupId__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__MatchInAsset__c.Label}" 
+								 width="5%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__MatchInAsset__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__MatchInAsset__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__AdjustmentAmount__c.Label}" 
+								 width="10%" >
+						<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentAmount__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentAmount__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__AdjustmentType__c.Label}" 
+								 width="5%" >
+						<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentType__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentType__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+				   	<apex:column width="5%" >
+				    	<apex:commandLink action="{!currentRule.doAddRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!NOT(isFilterEditMode)}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Plus2}" 
+				                       	title="{!$Label.apttus_config2__Add}" 
+				                       	alt="{!$Label.apttus_config2__Add}" />		  	  	  
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+				   	<apex:column width="5%" >
+					   	<apex:commandLink action="{!currentRule.doDeleteRow}" 
+									  	  reRender="idPriceRuleEntriesSection" 
+									  	  rendered="{!NOT(isFilterEditMode) && entryInfo.entrySO.Apttus_Config2__Sequence__c > 1}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Minus2}" 
+			                    		title="{!$Label.apttus_config2__Remove}" 
+			                    		alt="{!$Label.apttus_config2__Remove}" />		  
+						</apex:commandLink>
+					</apex:column>
+					
+					<apex:column width="5%" >
+				   		<apex:commandLink action="{!currentRule.doMoveUpRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!NOT(isFilterEditMode) && entryInfo.entrySO.Apttus_Config2__Sequence__c > 1}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveUp}" 
+	                       				title="{!$Label.apttus_config2__MoveUp}" 
+	                       				alt="{!$Label.apttus_config2__MoveUp}" />
+						</apex:commandLink>
+						<apex:commandLink action="{!currentRule.doMoveDownRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!NOT(isFilterEditMode) && entryInfo.entrySO.Apttus_Config2__Sequence__c < currentRule.lastRowSequence}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveDown}" 
+	                       				title="{!$Label.apttus_config2__MoveDown}" 
+	                       				alt="{!$Label.apttus_config2__MoveDown}" />
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+				   	<apex:column width="5%" >
+				   		<apex:outputText value="{!entryInfo.ErrorMsg}" style="color:red;" 
+				   						 rendered="{!NOT(isFilterEditMode)}" />
+				   	</apex:column>
+				   
+		        </apex:pageBlockTable>
+		        
+		        <apex:pageBlockTable value="{!currentRule.ruleEntries}" 
+		        					 var="entryInfo" 
+		        					 columns="14" 
+		        					 rowClasses="oddRow,evenRow" 
+		        					 rendered="{!currentRule.isVolumeBasedRule}" >
+		        	
+		        	<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__Sequence__c.Label}" 
+		        				 width="5%" >
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" 
+		        						  rendered="{!NOT(isFilterEditMode) || (entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum)}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__MinProducts__c.Label}" 
+								 width="10%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__MinProducts__c}" 
+		        						 style="width:60px"
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__MinProducts__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__MaxProducts__c.Label}" 
+								 width="10%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__MaxProducts__c}" 
+		        						 style="width:60px"
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__MaxProducts__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__MinQuantity__c.Label}" 
+								 width="5%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__MinQuantity__c}" 
+		        						 style="width:60px"
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__MinQuantity__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__MaxQuantity__c.Label}" 
+								 width="5%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__MaxQuantity__c}" 
+		        						 style="width:60px"
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__MaxQuantity__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__ProductFamily__c.Label}" 
+								 width="10%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__ProductFamily__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__ProductFamily__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__ProductCategory__c.Label}" 
+								 width="10%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__ProductCategory__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__ProductCategory__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__ProductGroupId__c.Label}" 
+								 width="10%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__ProductGroupId__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__ProductGroupId__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__AdjustmentAmount__c.Label}" 
+								 width="10%" >
+						<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentAmount__c}" 
+										 style="width:100px"
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentAmount__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__AdjustmentType__c.Label}" 
+								 width="5%" >
+						<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentType__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentType__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+				   	<apex:column width="5%" >
+				    	<apex:commandLink action="{!currentRule.doAddRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!NOT(isFilterEditMode)}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Plus2}" 
+				                       	title="{!$Label.apttus_config2__Add}" 
+				                       	alt="{!$Label.apttus_config2__Add}" /> 		  	  	  
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+				   	<apex:column width="5%" >
+					   	<apex:commandLink action="{!currentRule.doDeleteRow}" 
+									  	  reRender="idPriceRuleEntriesSection" 
+									  	  rendered="{!NOT(isFilterEditMode) && entryInfo.entrySO.Apttus_Config2__Sequence__c > 1}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Minus2}" 
+			                    		title="{!$Label.apttus_config2__Remove}" 
+			                    		alt="{!$Label.apttus_config2__Remove}" />		  
+						</apex:commandLink>
+					</apex:column>
+					
+					<apex:column width="5%" >
+				   		<apex:commandLink action="{!currentRule.doMoveUpRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!NOT(isFilterEditMode) && entryInfo.entrySO.Apttus_Config2__Sequence__c > 1}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveUp}" 
+	                       				title="{!$Label.apttus_config2__MoveUp}" 
+	                       				alt="{!$Label.apttus_config2__MoveUp}" />
+						</apex:commandLink>
+						<apex:commandLink action="{!currentRule.doMoveDownRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!NOT(isFilterEditMode) && entryInfo.entrySO.Apttus_Config2__Sequence__c < currentRule.lastRowSequence}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveDown}" 
+	                       				title="{!$Label.apttus_config2__MoveDown}" 
+	                       				alt="{!$Label.apttus_config2__MoveDown}" />
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+				   	<apex:column width="5%" >
+				   		<apex:outputText value="{!entryInfo.ErrorMsg}" style="color:red;" 
+				   						 rendered="{!NOT(isFilterEditMode)}" />
+				   	</apex:column>
+				   
+		        </apex:pageBlockTable>
+		        
+		        <apex:pageBlockTable value="{!currentRule.ruleEntries}" 
+		        					 var="entryInfo" 
+		        					 columns="9" 
+		        					 rowClasses="oddRow,evenRow" 
+		        					 rendered="{!currentRule.isInclusionBasedRule}" >
+		        	
+		        	<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__Sequence__c.Label}" 
+		        				 width="5%" >
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" 
+		        						  rendered="{!NOT(isFilterEditMode) || (entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum)}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__InclusionMethod__c.Label}" 
+								 width="15%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__InclusionMethod__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__InclusionMethod__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__ProductGroupId__c.Label}" 
+								 width="25%" >
+		        		<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__ProductGroupId__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__ProductGroupId__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__AdjustmentAmount__c.Label}" 
+								 width="10%" >
+						<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentAmount__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentAmount__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+					<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceRuleEntry__c.Fields.Apttus_Config2__AdjustmentType__c.Label}" 
+								 width="5%" >
+						<apex:inputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentType__c}" 
+		        						 rendered="{!NOT(isFilterEditMode)}" />
+		        		<apex:outputField value="{!entryInfo.entrySO.Apttus_Config2__AdjustmentType__c}" 
+		        						  rendered="{!isFilterEditMode && entryInfo.entrySO.Apttus_Config2__Sequence__c <= currentRule.filterRowNum}" />
+					</apex:column>
+					
+				   	<apex:column width="5%" >
+				    	<apex:commandLink action="{!currentRule.doAddRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!NOT(isFilterEditMode)}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Plus2}" 
+				                       	title="{!$Label.apttus_config2__Add}" 
+				                       	alt="{!$Label.apttus_config2__Add}" />		  	  	  
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+				   	<apex:column width="5%" >
+					   	<apex:commandLink action="{!currentRule.doDeleteRow}" 
+									  	  reRender="idPriceRuleEntriesSection" 
+									  	  rendered="{!NOT(isFilterEditMode) && entryInfo.entrySO.Apttus_Config2__Sequence__c > 1}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_Minus2}" 
+			                    		title="{!$Label.apttus_config2__Remove}" 
+			                    		alt="{!$Label.apttus_config2__Remove}" />		  
+						</apex:commandLink>
+					</apex:column>
+					
+					<apex:column width="5%" >
+				   		<apex:commandLink action="{!currentRule.doMoveUpRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!NOT(isFilterEditMode) && entryInfo.entrySO.Apttus_Config2__Sequence__c > 1}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveUp}" 
+	                       				title="{!$Label.apttus_config2__MoveUp}" 
+	                       				alt="{!$Label.apttus_config2__MoveUp}" />
+						</apex:commandLink>
+						<apex:commandLink action="{!currentRule.doMoveDownRow}" 
+								  	  	  reRender="idPriceRuleEntriesSection" 
+								  	  	  rendered="{!NOT(isFilterEditMode) && entryInfo.entrySO.Apttus_Config2__Sequence__c < currentRule.lastRowSequence}" >
+							<apex:param name="rowNum" value="{!entryInfo.entrySO.Apttus_Config2__Sequence__c}" />
+							<apex:image url="{!$Resource.Apttus_Config2__Image_MoveDown}" 
+	                       				title="{!$Label.apttus_config2__MoveDown}" 
+	                       				alt="{!$Label.apttus_config2__MoveDown}" />
+						</apex:commandLink>
+				   	</apex:column>
+				   	
+				   	<apex:column width="25%" >
+				   		<apex:outputText value="{!entryInfo.ErrorMsg}" style="color:red;" 
+				   						 rendered="{!NOT(isFilterEditMode)}" />
+				   	</apex:column>
+				   
+		        </apex:pageBlockTable>
+		        
+		        <apex:outputText value="{!$Label.apttus_config2__NoDimensionsToDisplay}" rendered="{!currentRule.isDimensionBasedRule && NOT(currentRule.isDimension1Enabled)}" />
+		    </apex:pageBlockSection>
+		    
+		</apex:pageBlock>
+	   
+</apex:component>

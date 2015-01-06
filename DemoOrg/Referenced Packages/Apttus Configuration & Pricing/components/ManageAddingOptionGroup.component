@@ -1,0 +1,302 @@
+<!-- 
+    Apttus Config & Pricing
+    ClassificationHierarchySearch
+     
+    @2010-2011 Apttus Inc. All rights reserved.
+
+ --> 
+<apex:component controller="Apttus_Config2.ClassificationHierarchySearchController" allowDML="true" >	
+    <!--  page controller - specify page controller associated with the component. The page controller is
+	used to locate the select controller to delegate the select and cancel actions to. 
+	-->	
+	<apex:attribute name="pageController" 
+					description="Page Controller" 
+					type="Apttus_Config2.PageControllerBase" 
+					required="true" 
+					assignTo="{!pageControllerProp}" />
+	
+	<!--  selectButtonLabel - specify a label to override the select button label. -->
+	<apex:attribute name="selectButtonLabel" 
+					description="Label for the select button" 
+					type="String" 
+					required="false" 
+					assignTo="{!selectButtonLabelProp}" />
+
+	<!--  tableTitle - specify a label to override the list title. -->
+	<apex:attribute name="tableTitle"
+		description="Title for list" type="String"
+		required="false" assignTo="{!tableTitleProp}" />
+									
+	<!--  autoSearch - specify here or provide as a parameter to the component. -->
+	<apex:attribute name="autoSearch" 
+					description="Auto Search Indicator" 
+					type="Boolean" 
+					required="false" 
+					default="true" 
+					assignTo="{!autoSearchProp}" />
+									
+    <!--  preFilterXml - specify here or provide as a parameter to the component. -->
+	<apex:attribute name="preFilterXml" 
+					description="Pre-filter for auto search" 
+					type="String" 
+					required="false" 
+					assignTo="{!preFilterXmlProp}" />
+	
+	<!--  customFieldNamesCsv - specify here or provide as a parameter to the component. -->
+	<apex:attribute name="customFieldNamesCsv" 
+					description="Comma separated list of custom field names" 
+					type="String" 
+					required="false" 
+					assignTo="{!customFieldNamesCsvProp}" />
+	
+	<style>
+		.optGrpSearch{
+			width:210px;
+		}
+	</style>
+	<apex:outputPanel id="newOptionGroupPanelWrap">
+	<apex:pageBlock id="newOptionGroupPanel" rendered="{!creatingNew}" >
+   		<apex:pageBlockSection columns="1" >
+	   		<apex:pageBlockSectionItem >
+		   		<apex:outputLabel value="{!$Label.apttus_config2__SelectParentCategory}" />
+		   		<apex:selectlist value="{!selectedParentId}" size="1">
+			         <apex:selectOption itemValue="" itemLabel="--{!$Label.apttus_config2__NoParent}--"/>
+			         <apex:selectOptions value="{!ParentNodes}" />
+			     </apex:selectlist>
+		     </apex:pageBlockSectionItem>
+		     <apex:pageBlockSectionItem >
+					<apex:outputLabel value="{!$ObjectType.Apttus_Config2__ClassificationHierarchy__c.fields.Name.label}"/>
+				
+					<apex:inputField styleClass="grp-name" required="true" value="{!newOptionGroup.Name}"/>
+			</apex:pageBlockSectionItem>
+		</apex:pageBlockSection> 
+		<apex:pageBlockButtons location="both">
+			<apex:commandButton value="{!$Label.apttus_config2__Save}" 
+								action="{!saveNewOptionGroup}" 
+								rerender="newOptionGroupPanelWrap"
+								onClick="loading('.save-btn');"
+								styleClass="save-btn grp-search"
+								onComplete="loadComplete('.save-btn');if('{!newOptionGroup.Name}' != ''){parent.rerenderTreeAndFrame();}"/>
+			<apex:commandButton value="{!$Label.apttus_config2__Cancel}"
+								onClick="parent.rerenderTreeAndFrame();"/>
+		</apex:pageBlockButtons>
+	</apex:pageBlock>
+	</apex:outputPanel>
+																	
+		<script>
+			//cannot define var in js for IE8
+			var aptAddedCheckboxes = [];
+			j$(document).ready(function(){
+				
+				j$(document).on('keypress','.grp-name',function(event) {
+					if(event.keyCode==13) {
+						j$('.grp-search:first').trigger('click');
+						return false;
+					}
+				});
+				j$('.optGrpSearch').keypress(function(event) {
+					if(event.keyCode==13) {
+						j$('.optGrpSearch').val(j$(this).val());
+					}
+					j$.APTTUS.onPressEnterClickElement(event,j$('.search-button'));
+				});
+			});
+			function checkall(){
+				j$('.pog-checkbox').prop('checked', j$('.check-all').prop('checked'));
+			}
+		</script>	 
+	
+	<apex:outputPanel id="idClassificationHierarchiesBlockWrap" >
+		<apex:outputPanel rendered="{!NOT(creatingNew)}" >
+		<apex:pageBlock id="idClassificationHierarchiesBlock" mode="detail" rendered="{!isEnabled}" >
+			<apex:pageBlockButtons location="both">
+		        <apex:commandButton value="{!selectButtonLabel}" 
+		        					action="{!doOk}" 
+		        					rerender="idResultSetPanel, idErrorMsg"
+		        					onClick="loading('.save-btn');"
+									styleClass="save-btn"
+									onComplete="loadComplete('.save-btn');if(!{!errorFound}){parent.rerenderTreeAndFrame();}"/>
+		        <apex:actionStatus startText="{!$Label.apttus_config2__AssociatingOptionGroups}..."
+		        					onStart="j$('.associate-button').hide();"
+	            					onStop="j$('.associate-button').show();" 
+	            					id="associatingOptionGroups"/>
+		        
+		        <apex:commandButton value="{!$Label.apttus_config2__CreateNew}"
+		        					action="{!addNewOptionGroup}" 
+		        					rerender="newOptionGroupPanelWrap,idClassificationHierarchiesBlockWrap"
+		        					onClick="parent.showLoadingDiv();"
+		        					onComplete="parent.setIframeHeight('prodFrame');parent.hideLoadingDiv();"/>
+		        					
+		        <div style="float:right; width:291px;">
+		        	<div style="width:215px;float:left;">
+		        		<apex:inputText value="{!searchTerm}" 
+		        					id="optGrpSearch" 
+		        					styleClass="optGrpSearch" />
+		        	</div>
+		        	
+		        	<apex:commandButton action="{!doQuickSearch}" 
+		        						value="{!$Label.apttus_config2__Search}"
+		        						rerender="idResultSetPanel"
+		        						styleClass="search-button"
+		        						onClick="j$('.optGrpSearch').val(j$(this).siblings('div').children('.optGrpSearch').val());parent.showLoadingDiv();"
+		        						onComplete="parent.hideLoadingDiv();" />
+		        </div>
+		    </apex:pageBlockButtons>
+		    
+		    <apex:outputPanel id="idResultSetPanel">
+			    <apex:outputPanel id="idResultStatsPanel" styleClass="bNext" layout="block" style="text-align: right;" rendered="{!hasClassificationHierarchies}">
+					{!$Label.PageNbr}:&nbsp;{!currentPageNumber}&nbsp;{!$Label.OutOf}&nbsp;{!totalPages}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<apex:outputPanel id="idNavigationPanel" styleClass="next" style="padding-top:0;font-size:12px;" layout="block" rendered="{!OR(hasNextPage,hasPreviousPage)}">
+						<apex:outputPanel rendered="{!NOT(hasPreviousPage)}" styleClass="greyedLink">&lt;{!$Label.PreviousPage}</apex:outputPanel>
+						<apex:commandLink rendered="{!hasPreviousPage}" 
+											action="{!previousPage}" 
+											reRender="idClassificationHierarchiesBlock"
+											status="loadingOptionGroups"
+											onClick="j$('.check-all').prop('checked',false);parent.showLoadingDiv();"
+											onComplete="parent.hideLoadingDiv();">&lt;{!$Label.PreviousPage}</apex:commandLink>
+						<span> | </span>
+						<apex:outputPanel rendered="{!NOT(hasNextPage)}" styleClass="greyedLink">{!$Label.NextPage}&gt;</apex:outputPanel>
+						<apex:commandLink rendered="{!hasNextPage}" 
+											action="{!nextPage}" 
+											reRender="idClassificationHierarchiesBlock"
+											status="loadingOptionGroups"
+											onClick="j$('.check-all').prop('checked',false);parent.showLoadingDiv();"
+											onComplete="parent.hideLoadingDiv();">{!$Label.NextPage}&gt;</apex:commandLink>
+					</apex:outputPanel>
+				</apex:outputPanel>
+				&nbsp;
+				<apex:outputPanel id="idRecordSetPanel" > 
+					<apex:pageBlockSection columns="1" id="idClassificationHierarchiesSection">
+				        <apex:pageBlockTable value="{!classificationHierarchies}" var="classificationHierarchyInfo" width="100%" rendered="{!hasClassificationHierarchies}">
+				        	 <apex:column >
+	                            <apex:facet name="header">
+	                                <apex:inputCheckbox id="idSelectAllAdded" styleClass="check-all" onClick="checkall();"/>
+	                            </apex:facet>
+	                            <apex:inputCheckbox value="{!classificationHierarchyInfo.selected}" id="idSelectAdded" styleClass="pog-checkbox" />	
+	                        </apex:column>
+				        	<apex:column value="{!classificationHierarchyInfo.classificationHierarchySO.Name}" >
+				        		<apex:facet name="header">
+					        		<apex:commandLink value="{!$ObjectType.Apttus_Config2__ClassificationHierarchy__c.Fields.Name.Label}" 
+					        						  action="{!doSort}" 
+					        						  reRender="idClassificationHierarchiesBlock"
+					        						  status="loadingOptionGroups">
+	                            		<apex:param name="sortFieldName" value="Name" />
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}" 
+	                        						title="{!$Label.apttus_config2__SortedAscending}" 
+	                        						alt="{!$Label.apttus_config2__SortedAscending}" 
+	                        						rendered="{!sortFieldName == 'Name' && sortOrder != 'DESC'}"/>
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}" 
+	                        						title="{!$Label.apttus_config2__SortedDescending}" 
+	                        						alt="{!$Label.apttus_config2__SortedDescending}" 
+	                        						rendered="{!sortFieldName == 'Name' && sortOrder == 'DESC'}"/>
+	                        		</apex:commandLink>
+				        		</apex:facet>
+				        	</apex:column>
+				        	
+				        	<apex:column value="{!classificationHierarchyInfo.classificationHierarchySO.Apttus_Config2__Label__c}" >
+				        		<apex:facet name="header">
+					        		<apex:commandLink value="{!$ObjectType.Apttus_Config2__ClassificationHierarchy__c.Fields.Apttus_Config2__Label__c.Label}" 
+					        						  action="{!doSort}" 
+					        						  reRender="idClassificationHierarchiesBlock"
+					        						  status="loadingOptionGroups">
+	                            		<apex:param name="sortFieldName" value="{!nameSpacePrefix}Label__c" />
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}" 
+	                        						title="{!$Label.apttus_config2__SortedAscending}" 
+	                        						alt="{!$Label.apttus_config2__SortedAscending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}Label__c' && sortOrder != 'DESC'}"/>
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}" 
+	                        						title="{!$Label.apttus_config2__SortedDescending}" 
+	                        						alt="{!$Label.apttus_config2__SortedDescending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}Label__c' && sortOrder == 'DESC'}"/>
+	                        		</apex:commandLink>
+				        		</apex:facet>
+				        	</apex:column>
+				        	
+				        	<apex:column value="{!classificationHierarchyInfo.classificationHierarchySO.AncestorId__r.Apttus_Config2__Label__c}" >
+				        		<apex:facet name="header">
+					        		<apex:commandLink value="{!$ObjectType.Apttus_Config2__ClassificationHierarchy__c.Fields.Apttus_Config2__AncestorId__c.Label}" 
+					        						  action="{!doSort}" 
+					        						  reRender="idClassificationHierarchiesBlock"
+					        						  status="loadingOptionGroups">
+	                            		<apex:param name="sortFieldName" value="{!nameSpacePrefix}AncestorId__r.Label__c" />
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}" 
+	                        						title="{!$Label.apttus_config2__SortedAscending}" 
+	                        						alt="{!$Label.apttus_config2__SortedAscending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}AncestorId__r.Label__c' && sortOrder != 'DESC'}"/>
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}" 
+	                        						title="{!$Label.apttus_config2__SortedDescending}" 
+	                        						alt="{!$Label.apttus_config2__SortedDescending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}AncestorId__r.Label__c' && sortOrder == 'DESC'}"/>
+	                        		</apex:commandLink>
+				        		</apex:facet>
+				        	</apex:column>
+				        	
+				        	<apex:column value="{!classificationHierarchyInfo.classificationHierarchySO.HierarchyId__r.Apttus_Config2__HierarchyLabel__c}" >
+				        		<apex:facet name="header">
+					        		<apex:commandLink value="{!$ObjectType.Apttus_Config2__ClassificationHierarchy__c.Fields.Apttus_Config2__HierarchyId__c.Label}" 
+					        						  action="{!doSort}" 
+					        						  reRender="idClassificationHierarchiesBlock"
+					        						  status="loadingOptionGroups">
+	                            		<apex:param name="sortFieldName" value="{!nameSpacePrefix}HierarchyId__r.HierarchyLabel__c" />
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}" 
+	                        						title="{!$Label.apttus_config2__SortedAscending}" 
+	                        						alt="{!$Label.apttus_config2__SortedAscending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}HierarchyId__r.HierarchyLabel__c' && sortOrder != 'DESC'}"/>
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}" 
+	                        						title="{!$Label.apttus_config2__SortedDescending}" 
+	                        						alt="{!$Label.apttus_config2__SortedDescending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}HierarchyId__r.HierarchyLabel__c' && sortOrder == 'DESC'}"/>
+	                        		</apex:commandLink>
+				        		</apex:facet>
+				        	</apex:column>
+				        	
+				        	<apex:column value="{!classificationHierarchyInfo.classificationHierarchySO.Apttus_Config2__MinOptions__c}" >
+				        		<apex:facet name="header">
+					        		<apex:commandLink value="{!$ObjectType.Apttus_Config2__ClassificationHierarchy__c.Fields.Apttus_Config2__MinOptions__c.Label}" 
+					        						  action="{!doSort}" 
+					        						  reRender="idClassificationHierarchiesBlock"
+					        						  status="loadingOptionGroups">
+	                            		<apex:param name="sortFieldName" value="{!nameSpacePrefix}MinOptions__c" />
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}" 
+	                        						title="{!$Label.apttus_config2__SortedAscending}" 
+	                        						alt="{!$Label.apttus_config2__SortedAscending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}MinOptions__c' && sortOrder != 'DESC'}"/>
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}" 
+	                        						title="{!$Label.apttus_config2__SortedDescending}" 
+	                        						alt="{!$Label.apttus_config2__SortedDescending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}MinOptions__c' && sortOrder == 'DESC'}"/>
+	                        		</apex:commandLink>
+				        		</apex:facet>
+				        	</apex:column>
+				        				
+							<apex:column value="{!classificationHierarchyInfo.classificationHierarchySO.Apttus_Config2__MaxOptions__c}" >
+				        		<apex:facet name="header">
+					        		<apex:commandLink value="{!$ObjectType.Apttus_Config2__ClassificationHierarchy__c.Fields.Apttus_Config2__MaxOptions__c.Label}" 
+					        						  action="{!doSort}" 
+					        						  reRender="idClassificationHierarchiesBlock"
+					        						  status="loadingOptionGroups">
+	                            		<apex:param name="sortFieldName" value="{!nameSpacePrefix}MaxOptions__c" />
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}" 
+	                        						title="{!$Label.apttus_config2__SortedAscending}" 
+	                        						alt="{!$Label.apttus_config2__SortedAscending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}MaxOptions__c' && sortOrder != 'DESC'}"/>
+	                        			<apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}" 
+	                        						title="{!$Label.apttus_config2__SortedDescending}" 
+	                        						alt="{!$Label.apttus_config2__SortedDescending}" 
+	                        						rendered="{!sortFieldName == '{!nameSpacePrefix}MaxOptions__c' && sortOrder == 'DESC'}"/>
+	                        		</apex:commandLink>
+				        		</apex:facet>
+				        	</apex:column>
+				          	
+				        </apex:pageBlockTable>
+				        <apex:outputText value="{!$Label.apttus_config2__NoRecordsToDisplay}" rendered="{!NOT(hasClassificationHierarchies)}" />
+				    </apex:pageBlockSection>
+				</apex:outputPanel>
+			
+			</apex:outputPanel>
+		</apex:pageBlock>
+	</apex:outputPanel>
+	</apex:outputPanel>
+	<apex:actionStatus onStart="j$('#loading-option-groups').show();"
+            onStop="parent.finishedLoadingOpGroups();" id="loadingOptionGroups"/>
+</apex:component>

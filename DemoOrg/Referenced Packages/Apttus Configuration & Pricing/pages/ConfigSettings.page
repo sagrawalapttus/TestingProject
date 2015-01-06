@@ -1,0 +1,34 @@
+<!-- 
+    Apttus Config & Pricing
+    ConfigSettings
+     
+    @2011-2012 Apttus Inc. All rights reserved.
+
+ -->
+<apex:page cache="false"
+           standardStylesheets="true"
+           setup="true"
+           tabStyle="ConfigSettings__tab">	
+    
+    <apex:sectionHeader title="{!$Label.apttus_config2__ConfigSettings}" />
+	
+	<apex:pageBlock title="{!$Label.apttus_config2__ConfigSettings}" 
+					mode="edit" >
+		
+		<apex:pageBlockSection columns="2" >
+			<apex:outputLink title="{!$Label.apttus_config2__DisplayColumnSettings}" 
+			   	  			 value="{!$Page.Apttus_Config2__DisplayColumnSettings}">{!$Label.apttus_config2__DisplayColumnSettings}</apex:outputLink>
+			<apex:outputLink title="{!$Label.apttus_config2__SelectProductsSettings}" 
+			   	  			 value="{!$Page.Apttus_Config2__SelectProductsSettings}">{!$Label.apttus_config2__CatalogPageSettings}</apex:outputLink>
+			<apex:outputLink title="{!$Label.apttus_config2__DisplayActionSettings}" 
+			   	  			 value="{!$Page.Apttus_Config2__DisplayActionSettings}">{!$Label.apttus_config2__DisplayActionSettings}</apex:outputLink>
+			<apex:outputLink title="{!$Label.apttus_config2__SelectBundleOptionsSettings}" 
+			   	  			 value="{!$Page.Apttus_Config2__SelectBundleOptionsSettings}">{!$Label.apttus_config2__BundlePageSettings}</apex:outputLink>
+			<apex:outputLink title="{!$Label.apttus_config2__SystemProperties}" 
+			   	  			 value="{!$Page.Apttus_Config2__SystemProperties}">{!$Label.apttus_config2__SystemProperties}</apex:outputLink>
+			<apex:outputLink title="{!$Label.apttus_config2__InstalledProductsSettings}" 
+			   	  			 value="{!$Page.Apttus_Config2__InstalledProductsSettings}">{!$Label.apttus_config2__InstalledProductsSettings}</apex:outputLink>
+		</apex:pageBlockSection>
+		
+	</apex:pageBlock>
+</apex:page>

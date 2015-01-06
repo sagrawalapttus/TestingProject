@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Protected</customSettingsVisibility>
+    <description>Comply Private properties</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>AESKey__c</fullName>
+        <deprecated>false</deprecated>
+        <description>THE AES key</description>
+        <externalId>false</externalId>
+        <inlineHelpText>THE AES key</inlineHelpText>
+        <label>AES Key</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ApiUserKey__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The API User Key for unattended batch publish tasks.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The API User Key for unattended batch publish tasks.</inlineHelpText>
+        <label>Api User Key</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Comply Private Properties</label>
+</CustomObject>

@@ -1,0 +1,28 @@
+<apex:page controller="Assignment2Controller">
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+  This is your new Page
+  <!-- End Default Content REMOVE THIS -->
+  <apex:form >
+      <apex:pageblock >
+          <apex:pageblocksection >  
+              <apex:outputLabel value="Search"></apex:outputLabel>        
+              <apex:inputText value="{!sAccName}" />
+              <apex:commandButton value="Search" action="{!GetAccountDetails}" reRender="RenderSearchDetailBox"/>
+          </apex:pageblocksection>
+       </apex:pageblock>
+       <apex:pageblock id="RenderSearchDetailBox">
+          <apex:pageBlockSection rendered="{!Rendered}">
+              <apex:pageblockTable value="{!lstaccount}" var="acct">
+                  <apex:column headerValue="Name" ><apex:outputField value="{!acct.Name}"/></apex:column>
+                  <apex:column headerValue="Billing State/ Province"><apex:outputField value="{!acct.Billing_State_Province__c}" /></apex:column>
+                  <apex:column headerValue="Phone"><apex:outputField value="{!acct.Phone}" /></apex:column>
+                 <apex:column headerValue="WebSite"><apex:outputField value="{!acct.WebSite}" /></apex:column>
+              </apex:pageblockTable>              
+          </apex:pageBlockSection>
+          
+        
+      
+      </apex:pageblock>
+  </apex:form>
+</apex:page>

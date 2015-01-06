@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Holds information about custom actions displayed in installed product view, cart view etc</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>ActionArea__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Indicates whether the action is displayed on left, right, center section of the action bar. The value more indicates it is displayed under more button.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Select left, right, center or more as the action display area</inlineHelpText>
+        <label>Action Area</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ActionLabelName__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The name of the custom label for the action.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The name of the custom label for the action.</inlineHelpText>
+        <label>Action Label Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ActionName__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Enter the API name for the action.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Enter the API name for the action.</inlineHelpText>
+        <label>Action Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ActionPage__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The name of the custom action page. A custom action may implemented either as a Visualforce page or as a custom class</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The name of the custom action page. A custom action may implemented either as a Visualforce page or as a custom class</inlineHelpText>
+        <label>Action Page</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ActionParams__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The url parameters for the action. Multiple parameters may be passed by using the ampersand character to separate each parameter. Each parameter is expressed in the form param-name=param-value. For e.g. templateName=XYZ&amp;draft=true</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The url parameters for the action. Multiple parameters may be passed by using the ampersand character to separate each parameter. Each parameter is expressed in the form param-name=param-value. For e.g. templateName=XYZ&amp;draft=true</inlineHelpText>
+        <label>Action Params</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ActionStyleClass__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Indicates style class used  for the action.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Enter style class name for the action.</inlineHelpText>
+        <label>Action Style Class</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ActionType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The action type</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The action type</inlineHelpText>
+        <label>Action Type</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AlwaysDisplay__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicates whether the action should be displayed even when it is not enabled</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Check this to display the action as disabled(grayed out)  even when it is not enabled.</inlineHelpText>
+        <label>Always Display</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Behavior__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The behavior the open page action takes.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The behavior the open page action takes.</inlineHelpText>
+        <label>Behavior</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DisplayAs__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Indicates whether the action is displayed as action or task or both</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Enter action or task or both to display the action on a page as action button or task.</inlineHelpText>
+        <label>Display As</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DisplayType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The action display type 
+
+Valid values are the following 
+
+Cart Line Item 
+Asset Line Item</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The action display type 
+
+Valid values are the following 
+
+Cart Line Item 
+Asset Line Item</inlineHelpText>
+        <label>Display Type</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>IsEnabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicates whether the action is enabled for the display</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates whether the action is enabled for the display</inlineHelpText>
+        <label>Is Enabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Sequence__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The action display sequence</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The action display sequence</inlineHelpText>
+        <label>Sequence</label>
+        <precision>2</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Config Custom Display Actions</label>
+</CustomObject>

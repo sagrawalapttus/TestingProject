@@ -1,0 +1,111 @@
+<!-- 
+    Apttus Config & Pricing
+    RecommendedProductsComponent
+     
+    @2012-2013 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.RecommendedProductsController"
+                allowDML="true">
+                
+	<apex:attribute name="SelectedProducts" 
+    				description="Selected Products in Cart" 
+                    type="Id[]" 
+                    required="true"
+                    assignTo="{!SelectedProductsProp}" />
+                    
+	<apex:attribute name="ConfigId" 
+    				description="Product Config Id" 
+                    type="String" 
+                    required="true"
+                    assignTo="{!ConfigIdProp}" />
+
+	<style>
+		.aptRelatedProductsList {
+			display: inline;
+		    list-style-type: none;
+		    float: left;
+		            
+		}
+		        
+		.aptRelatedProductsList  li{
+			display: inline-block;
+		    list-style-type: none;
+		    padding-right:3px;
+		    text-align:center;
+		            
+		}
+		        
+		.aptRelatedProductsList .aptCartLineItemIcon {
+			height: 100px;
+		}
+		    
+		.aptListButton {
+			-moz-box-shadow: 0px 1px 0px 0px #ffffff;   
+			-webkit-box-shadow: 0px 1px 0px 0px #ffffff;
+			box-shadow: 0px 1px 0px 0px #ffffff;
+			background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #71b2f6), color-stop(1, #236fbd) );
+			background:-moz-linear-gradient( center top, #71b2f6 5%, #236fbd 100% );
+			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#71b2f6', endColorstr='#236fbd');
+			background-color:#71b2f6;
+			-moz-border-radius:2px;
+			-webkit-border-radius:2px;
+			border-radius:2px;
+			
+			display:inline-block;
+			color:#ffffff;
+			font-family:arial;
+			font-size:12px;
+			font-weight:normal;
+			padding:5px 24px;
+			text-decoration:none;
+			margin-right:5px;
+		}
+		.aptListButton:hover {
+			background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #89bff8), color-stop(1, #4a88c9) );
+			background:-moz-linear-gradient( center top, #89bff8 5%, #4a88c9 100% );
+			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#89bff8', endColorstr='#4a88c9');
+			background-color:#89bff8;
+			text-decoration:none;
+			color:#ffffff;
+		}
+		.aptListButton:active {
+			position:relative;
+			top:1px;
+			background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #507eaf), color-stop(1, #2570be) );
+			background:-moz-linear-gradient( center top, #507eaf 5%, #2570be 100% );
+			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#507eaf', endColorstr='#2570be');
+			background-color:#507eaf;
+		}
+	</style>
+
+    <br/>
+    <div style="float: left; padding: 4px;">
+    <apex:outputPanel rendered="{!HasRecommendedProducts}">
+    <ul class="aptRelatedProductsList">
+        <apex:repeat value="{!RecommendedProducts}"
+                     var="prod">
+            <li>
+                <div>
+                <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(prod.Apttus_Config2__IconId__c))}">
+                	<apex:image styleClass="aptCartLineItemIcon" url="/servlet/servlet.FileDownload?file={!prod.Apttus_Config2__IconId__c}" />
+                </apex:outputPanel>
+                <br/>
+                <a href="{!FullURL}{!prod}">{!prod.Name}</a>
+                <br/>
+                <br/>
+                <apex:commandLink value="{!$Label.apttus_config2__AddToCart}"  
+                                            styleClass="{!prod}-selected aptListButton"
+                                            rendered="true" 
+                                            onclick="j$('.{!prod}-selected').hide();invokeDoAddProductToCart('{!prod.Id}');j$('.{!prod}-load').show();return false;"/>
+                   	<img class="{!prod}-load" style="display:none;" src="/img/loading.gif"/>
+                </div>
+            </li>        
+        </apex:repeat>
+    </ul>
+    </apex:outputPanel>
+  	<apex:outputPanel rendered="{!NOT(HasRecommendedProducts)}">
+  		<label>{!$Label.apttus_config2__NoRecordsToDisplay}</label>
+  	</apex:outputPanel>
+    </div>
+</apex:component>

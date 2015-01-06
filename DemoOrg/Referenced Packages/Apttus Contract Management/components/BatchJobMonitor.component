@@ -1,0 +1,84 @@
+<!-- 
+    Apttus Contract Management
+    BatchJobMonitor
+     
+    @2012-2011 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus.BatchJobMonitorController" >	
+    
+    <!--  job class name -->
+    <apex:attribute name="jobClassName" 
+    				description="Job Class Name" 
+    				type="String" 
+    				required="true"
+    				assignTo="{!jobClassNameProp}" />
+    								
+    <!--  number of jobs to monitor -->
+    <apex:attribute name="numberOfJobs" 
+    				description="Number of Jobs to monitor" 
+    				type="Integer" 
+    				required="false"
+    				default="25" 
+    				assignTo="{!numberOfJobsProp}" />
+					
+ 	<apex:stylesheet value="{!$Resource.Apttus__ComplyStyles}" />
+	
+    <style>
+        .progressBar {
+            background-color: #f8f8f8;
+            border:1px solid #DDDDDD;
+            height: 19px;
+            width: 250px;
+        }
+        .progress {
+            background-color: #F7B64B;
+            border:1px solid #E78F08;
+            height: 100%;
+            margin: -1px;
+            text-align: center;
+            line-height: 18px;
+        }
+        .table-wrapper .pbBody{
+        	max-height: 149px !important;
+			overflow-y: scroll !important;
+        }
+    </style>
+	<div class="table-wrapper">
+	<apex:pageBlock id="idBatchJobMonitorBlock" 
+					title="{!$Label.apttus__BatchJobs}" 
+					mode="detail" >
+	   
+	    <apex:pageBlockSection id="idBatchJobMonitorSection" 
+	    					   columns="1" 
+	    					   collapsible="false" >
+	    					   
+	        <apex:pageBlockTable value="{!batchJobs}" var="jobInfo" columns="10" rendered="{!hasBatchJobs}" >
+	        	
+	        	<apex:column headerValue="{!$Label.apttus__JobName}" value="{!jobInfo.jobSO.ApexClass.Name}"  />
+				<apex:column value="{!jobInfo.jobSO.CreatedById}"  />
+				<apex:column value="{!jobInfo.jobSO.CreatedDate}"  />
+				<apex:column value="{!jobInfo.jobSO.Status}"  />
+				<apex:column >
+	                <div class="progressBar">
+	                    <div class="progress" style="width: {!jobInfo.percentComplete}%;">
+	                        {!jobInfo.percentComplete}%
+	                    </div>
+	                </div>
+	            </apex:column>
+	            <apex:column value="{!jobInfo.jobSO.ExtendedStatus}"  />
+	        	<apex:column value="{!jobInfo.jobSO.CompletedDate}"/>
+				<apex:column value="{!jobInfo.jobSO.TotalJobItems}"  />
+	        	<apex:column value="{!jobInfo.jobSO.JobItemsProcessed}"  />
+	        	<apex:column value="{!jobInfo.jobSO.NumberOfErrors}"  />
+	        	
+	        </apex:pageBlockTable>
+	        
+	        <apex:outputText value="{!$Label.apttus__NoRecordsToDisplay}" rendered="{!NOT(hasBatchJobs)}" />
+	    </apex:pageBlockSection>
+	    
+	    <apex:actionPoller reRender="idBatchJobMonitorBlock" interval="5" enabled="{!actionPollerEnabled}" />
+	    
+	</apex:pageBlock>
+	</div>   
+</apex:component>

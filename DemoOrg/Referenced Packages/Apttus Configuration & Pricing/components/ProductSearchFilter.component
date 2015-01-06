@@ -1,0 +1,244 @@
+<!-- 
+    Apttus Config & Pricing
+    SearchFilter
+     
+    @2010-2012 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.SearchFilterController" >	
+	<!--  sobject name - the primary sobject for the filter -->
+    <apex:attribute name="sObjectName" 
+    				description="SObject Name" 
+    				type="String" 
+    				required="true" 
+    				assignTo="{!sObjectNameProp}" />
+	
+	<!--  child sobject name - the sobject for the child filter (optional) -->
+	<apex:attribute name="childSObjectName" 
+    				description="Child SObject Name" 
+    				type="String" 
+    				required="false" 
+    				assignTo="{!childSObjectNameProp}" />
+    
+    <!--  relation field name - the parent lookup field name in the child object (required for child filters) -->
+    <apex:attribute name="relationFieldName" 
+    				description="Relation Field Name" 
+    				type="String" 
+    				required="false" 
+    				assignTo="{!relationFieldNameProp}" />
+    								
+	<!--  mode (search or edit) - specify the mode -->
+    <apex:attribute name="mode" 
+    				description="Mode" 
+    				type="String" 
+    				required="false" 
+    				default="search" 
+    				assignTo="{!modeProp}" />
+    
+    <!--  parent filter label - (required for child filters) -->
+    <apex:attribute name="parentFilterLabel" 
+    				description="Parent Filter Label" 
+    				type="String" 
+    				required="false" />
+    
+    <!--  child filter label - (required for child filters) -->
+    <apex:attribute name="childFilterLabel" 
+    				description="Child Filter Label" 
+    				type="String" 
+    				required="false" />
+    												
+	<!--  page controller - specify page controller associated with the component. The page controller is
+	used to locate the search controller to delegate the search action to. 
+	-->	
+	<apex:attribute name="pageController" 
+					description="Page Controller" 
+					type="Apttus_Config2.PageControllerBase" 
+					required="true" 
+					assignTo="{!pageControllerProp}" />
+	
+	<apex:includeScript value="{!$Resource.Apttus_Config2__ConfigJSLib}" />				
+ 	<apex:stylesheet value="{!$Resource.Apttus_Config2__ConfigStyles}" />
+	
+	<apex:pageBlock id="idSearchFilterBlock" rendered="{!isEnabled}" >
+		
+		<apex:outputPanel layout="block" styleClass="tabLink" rendered="{!isAdvancedEditMode}" >
+			<apex:outputPanel rendered="{!isDisplayParentFilterMode}" >&lt;{!parentFilterLabel}</apex:outputPanel>
+			<apex:commandLink rendered="{!isDisplayChildFilterMode}" 
+								action="{!doToggleDisplayFilterMode}" 
+								reRender="idSearchFilterBlock"
+								onClick="parent.showLoadingDiv();"
+								onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');">&lt;{!parentFilterLabel}</apex:commandLink>
+			<span> | </span>
+			<apex:outputPanel rendered="{!isDisplayChildFilterMode}" >{!childFilterLabel}&gt;</apex:outputPanel>
+			<apex:commandLink rendered="{!isDisplayParentFilterMode}" 
+								action="{!doToggleDisplayFilterMode}" 
+								reRender="idSearchFilterBlock"
+								onClick="parent.showLoadingDiv();"
+								onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');">{!childFilterLabel}&gt;</apex:commandLink>
+		</apex:outputPanel>
+		
+		<apex:selectList rendered="{!NOT(currentFilter.isAdvancedOptionsMode)}" styleClass="hiddenField" size="1" value="{!currentFilter.predicates[0].CompOper}" >
+			<apex:selectOption itemValue="contains" itemLabel="contains"/>
+		</apex:selectList>
+		
+		<apex:selectList rendered="{!NOT(currentFilter.isAdvancedOptionsMode)}" styleClass="hiddenField" size="1" value="{!currentFilter.predicates[0].FieldName}" >
+    		<apex:selectOption itemValue="name" itemLabel="Product Name"/>
+    	</apex:selectList>
+		
+		<apex:outputLabel rendered="{!NOT(currentFilter.isAdvancedOptionsMode)}" >{!$Label.apttus_config2__Search}:</apex:outputLabel><br/>
+		
+		<apex:inputText id="idFieldValue" 
+   						size="25" 
+   						value="{!currentFilter.predicates[0].FieldValue}" 
+   						onkeypress="return aptIgnoreEnterKey(event);"
+   						rendered="{!NOT(currentFilter.isAdvancedOptionsMode)}" /><br/>
+   						
+		<apex:commandLink action="{!currentFilter.doShowAdvancedOptions}" 
+						  value="{!$Label.apttus_config2__AdvancedOptions}" 
+						  reRender="idAdvancedOptionsSection, idSearchFilterBlock" 
+						  rendered="{!NOT(currentFilter.isAdvancedOptionsMode)}"
+						  onClick="parent.showLoadingDiv();"
+						  onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');" />
+		
+		<apex:pageBlockSection id="idPredicatesSection" 
+	    					   columns="1" 
+	    					   collapsible="false" >
+	    					   
+	        <apex:pageBlockTable rendered="{!currentFilter.isAdvancedOptionsMode}"
+	    					     value="{!currentFilter.predicates}" 
+	        					 var="predicate" 
+	        					 columns="8"
+	        					 rowClasses="oddRow,evenRow" >
+	        	<apex:variable var="displayMinus" value="1" />
+	        	<apex:column width="5%" rendered="{!currentFilter.isAdvancedOptionsMode}" >
+	        		<apex:outputText id="idRowNum" value="{!predicate.RowNum}. " />
+				</apex:column>
+	        	<apex:column headerValue="{!$Label.apttus_config2__Field}" width="25%" >
+	        		<apex:outputPanel styleClass="{!IF(predicate.FieldInError, 'errorRow', '')}" layout="block" >
+	        			<apex:selectList id="idField" size="1" value="{!predicate.FieldName}" >
+				      		<apex:selectOptions value="{!currentFilter.FieldItems}"></apex:selectOptions>
+				      		<apex:actionSupport event="onchange" 
+					      						action="{!currentFilter.doUpdateFieldInfo}" 
+					      						reRender="idPredicatesSection"
+					      						onSubmit="parent.showLoadingDiv();"
+					      						onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');" />
+				      	</apex:selectList>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column headerValue="{!$Label.apttus_config2__Operator}" width="25%" >
+			    	<apex:outputPanel styleClass="{!IF(predicate.CompOperInError, 'errorRow', '')}" layout="block" >
+				    	<apex:selectList id="idCompOper" size="1" value="{!predicate.CompOper}" >
+				      		<apex:selectOptions value="{!compOperItems}"></apex:selectOptions>
+				      	</apex:selectList>
+			      	</apex:outputPanel>
+			   	</apex:column>
+		   		<apex:column headerValue="{!$Label.apttus_config2__Value}" width="25%" >
+			    	<apex:outputPanel styleClass="{!IF(predicate.FieldValueInError, 'errorRow', '')}" layout="block" >
+			    		<apex:inputText id="idFieldValue" 
+			    						size="25" 
+			    						value="{!predicate.FieldValue}" 
+			    						onkeypress="return aptIgnoreEnterKey(event);"
+			    						rendered="{!NOT(predicate.IsPicklist)}" />
+			    		<apex:selectList id="idFieldValue2" 
+			    						 size="1" 
+			    						 multiselect="false"
+			    						 value="{!predicate.FieldValue}" 
+			    						 rendered="{!predicate.IsPicklist && NOT(predicate.IsMultiPicklist)}" >
+				      		<apex:selectOptions value="{!predicate.fieldValueItems}"></apex:selectOptions>
+				      	</apex:selectList>
+				      	<apex:selectList id="idFieldValue3" 
+			    						 size="5" 
+			    						 multiselect="true"
+			    						 value="{!predicate.FieldValues}" 
+			    						 rendered="{!predicate.IsPicklist && predicate.IsMultiPicklist}" >
+				      		<apex:selectOptions value="{!predicate.fieldValueItems}"></apex:selectOptions>
+				      	</apex:selectList>
+			   		</apex:outputPanel>
+			   	</apex:column>
+			   	<apex:column width="5%" >
+			    	<apex:outputText id="idBoolOper" 
+			    					 rendered="{!NOT(ISBLANK(predicate.BoolOper))}" 
+			    					 value="{!predicate.BoolOper}" />
+			    	<apex:commandLink action="{!currentFilter.doAddRow}" 
+							  	  	  reRender="idPredicatesSection, idAdvancedOptionsSection" 
+							  	  	  rendered="{!ISBLANK(predicate.BoolOper)}" 
+							  	  	  onClick="parent.showLoadingDiv();"
+							  	  	  onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');" >
+						<apex:image url="{!$Resource.Apttus_Config2__Image_Plus2}" 
+			                       	title="{!$Label.apttus_config2__Add}" 
+			                       	alt="{!$Label.apttus_config2__Add}" />   		  	  	  
+					</apex:commandLink>
+			   	</apex:column>
+			   	
+			   	<apex:column width="5%" rendered="{!currentFilter.displayMinus}" >
+				   	<apex:commandLink action="{!currentFilter.doDeleteRow}" 
+								  	  reRender="idPredicatesSection, idAdvancedOptionsSection"
+								  	  onClick="parent.showLoadingDiv();"
+								  	  rendered="{!predicate.RowNum > 1}"
+								  	  onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');" >
+						<apex:param name="rowNum" value="{!predicate.RowNum}" />		  
+						<apex:image url="{!$Resource.Apttus_Config2__Image_Minus2}" 
+				                    title="{!$Label.apttus_config2__Remove}" 
+				                    alt="{!$Label.apttus_config2__Remove}" />
+					</apex:commandLink>
+				</apex:column>
+			   	<apex:column rendered="{!NOT(ISBLANK(predicate.ErrorMsg))}" width="10%" >
+			   		<apex:outputText value="{!predicate.ErrorMsg}" style="color:red;" />
+			   	</apex:column>
+			   
+	        </apex:pageBlockTable>
+	        
+	    </apex:pageBlockSection>
+			    
+		<apex:pageBlockSection id="idAdvancedOptionsSection" columns="1" collapsible="false" >
+	        
+	        <apex:outputPanel rendered="{!currentFilter.isAdvancedOptionsMode}">
+				<apex:commandLink action="{!currentFilter.doAddRow}" 
+								  value="{!$Label.apttus_config2__AddRow}" 
+								  reRender="idAdvancedOptionsSection, idPredicatesSection"
+								  onClick="parent.showLoadingDiv();"
+								  onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');" />
+				<span>  </span>
+				<apex:commandLink action="{!currentFilter.doRemoveRow}" 
+								  value="{!$Label.apttus_config2__RemoveRow}" 
+								  reRender="idAdvancedOptionsSection, idPredicatesSection" 
+								  rendered="{!currentFilter.OkToRemoveRow}"
+								  onClick="parent.showLoadingDiv();"
+								  onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');" />
+				<apex:outputPanel id="idRemoveRow2" styleClass="greyedLink" rendered="{!NOT(currentFilter.OkToRemoveRow)}" >{!$Label.apttus_config2__RemoveRow}</apex:outputPanel>
+				<p/>	
+	        	
+	        	<br/>
+	        	<apex:outputText value="{!$Label.apttus_config2__AdvancedFilterCondition}" />
+	        	<br/>
+	        	<apex:inputText id="idAdvancedOptions" 
+	        					size="80" 
+	        					value="{!currentFilter.advancedOptions}" 
+	        					onkeypress="return aptIgnoreEnterKey(event);" />
+	        					
+	        	<apex:commandLink action="{!currentFilter.doHideAdvancedOptions}" 
+	        					  value="{!$Label.apttus_config2__ClearAdvancedOptions}" 
+	        					  reRender="idAdvancedOptionsSection, idSearchFilterBlock" 
+	        					  rendered="{!currentFilter.isAdvancedOptionsMode}"
+	        					  onClick="parent.showLoadingDiv();"
+	        					  onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');" />
+	        </apex:outputPanel>
+	        
+		</apex:pageBlockSection>
+		
+		<apex:panelGrid columns="2">
+	    	<apex:commandButton action="{!doSearch}" value="{!$Label.apttus_config2__Search}" rendered="{!isSearchMode}"
+	    						onClick="parent.showLoadingDiv();"
+						  		onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');"
+						  		rerender="idProductSearch" />
+	    	<apex:commandButton action="{!doOk}" value="{!$Label.apttus_config2__Ok}" rendered="{!isEditMode}"
+	    						onClick="parent.showLoadingDiv();"
+	    						onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');" />
+	    	<apex:commandButton action="{!doCancel}" value="{!$Label.apttus_config2__Cancel}" rendered="{!isEditMode}"
+								onClick="parent.showLoadingDiv();"
+								onComplete="parent.hideLoadingDiv();parent.setIframeHeight('productClassificationFrame');" />
+		</apex:panelGrid>
+			
+	</apex:pageBlock>
+	   
+</apex:component>

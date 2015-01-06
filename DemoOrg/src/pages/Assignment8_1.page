@@ -1,0 +1,45 @@
+<apex:page sidebar="false" standardController="Account" recordSetVar="accounts" >
+<header>
+    <script type="text/javascript">
+      
+        function selectRadio(accName)
+        {
+             var allRadios = document.getElementsByName('re');
+            var booRadio;
+            var x = 0;
+            for(x = 0; x < allRadios.length; x++){
+                 if(booRadio == this){
+                    this.checked = false;
+                    booRadio = null;
+                }else{
+                    booRadio = this;
+                    document.getElementById("divAccName").innerHTML = "Welcome Account " +  accName;
+                }
+            }
+        }
+       
+    </script>
+    </header>
+    <apex:form >
+         <apex:pageBlock >
+             <apex:pageMessage severity="low">
+                 <div id="divAccName">Select an account name by clicking it''s name</div>
+             </apex:pageMessage>
+         
+            <apex:pageblockTable value="{!accounts}" var="acc">
+                <apex:selectRadio title="Type" id="selectType" >                    
+                </apex:selectRadio>
+                <apex:column headervalue="Select account">                   
+                    <input type="radio" name='re'  onclick="selectRadio('{!acc.Name}')" />                   
+                </apex:column>
+              
+                <apex:column value="{!acc.Name}" headerValue="Name" />
+                <apex:column headerValue="Account Name" value="{!acc.name}"  onclick="SetAccountName('{!acc.name}')"/>
+                <apex:column value="{!acc.Billing_State_Province__c}" headerValue="Billing State" />
+                <apex:column value="{!acc.Phone}"/>
+                <apex:column value="{!acc.Website}"/>
+            </apex:pageblockTable>
+        </apex:pageBlock>
+    </apex:form>
+  
+</apex:page>

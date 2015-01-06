@@ -1,0 +1,140 @@
+<apex:page standardStylesheets="false" id="pge" renderAs="pdf">
+
+
+<c:dynapdfcomponent type="header" >
+
+<p>
+     Test
+    </p>
+</c:dynapdfcomponent>
+
+  <c:dynapdfcomponent type="footer">
+  <div align="right"><span style="float:left;width:80%;padding:30px 0 0 0;text-align:left;">ragava great person verm vko cvmkogfmckomfkoxdmkodxmko</span> <apex:image value="https://ap1.salesforce.com/resource/1406185821000/foo" height="68px" width="100px" style="float:left;"/> </div>
+
+</c:dynapdfcomponent>
+
+<div class="content">
+<p>
+<!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/>
+    <!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/>
+    <!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/>
+    <!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/>
+    <!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/><!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/>
+    <!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/><!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/><!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/><!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/><!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/><!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/><!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/><!----------------Your content goes here---------->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+<!----------------Your content goes here---------->    
+    <br/>
+    <br/>
+    <br/>
+</p>
+
+</div>
+
+</apex:page>

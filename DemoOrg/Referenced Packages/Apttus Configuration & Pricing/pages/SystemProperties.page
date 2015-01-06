@@ -1,0 +1,157 @@
+<!-- 
+    Apttus Config & Pricing
+    SystemPropertiesController
+     
+    @2011-2014 Apttus Inc. All rights reserved.
+
+ -->
+<apex:page controller="Apttus_Config2.SystemPropertiesController" 
+           standardStylesheets="true"
+           setup="true"
+           tabStyle="Apttus_Config2__ConfigSystemProperties__c" >
+    
+    <apex:stylesheet value="{!$Resource.Apttus_Config2__ConfigStyles}" />
+    
+    <style type="text/css">
+    
+        textarea {
+            width: 40%;
+        }
+        
+    </style>
+    
+    <apex:sectionHeader title="{!$Label.apttus_config2__SystemProperties}"  
+                        subtitle="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Label & ' ' & $Label.apttus_config2__Edit}" />
+                                            
+    <apex:form id="idSelectProductsSettings">
+        
+        <apex:pageBlock id="idSelectProductsBlock" 
+                        mode="edit" >
+            <apex:pageMessages />
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="{!$Label.apttus_config2__Save}" 
+                                    action="{!doSave}" />               
+                <apex:commandButton value="{!$Label.apttus_config2__Cancel}" 
+                                    action="{!doCancel}" 
+                                    immediate="true" />
+            </apex:pageBlockButtons>
+            <apex:outputPanel >
+            	<apex:pageBlockSection columns="2" title="{!$Label.apttus_config2__PageSelectionSettings}" collapsible="true">
+                    <apex:pageBlockSectionItem helpText="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__ViewCartPage__c.inlineHelpText}">
+                        <apex:outputLabel value="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__ViewCartPage__c.Label}"/>
+                        <apex:selectList value="{!settings.Apttus_Config2__ViewCartPage__c}" size="1">
+                            <apex:selectOptions value="{!ViewCartPage}"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:inputField value="{!settings.Apttus_Config2__GuidePageDefault__c}"/>
+                    <apex:pageBlockSectionItem helpText="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__DefaultProductsPage__c.inlineHelpText}">
+                        <apex:outputLabel value="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__DefaultProductsPage__c.Label}"/>
+                        <apex:selectList value="{!settings.Apttus_Config2__DefaultProductsPage__c}" size="1">
+                            <apex:selectOptions value="{!DefaultProductsPage}"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:inputField value="{!settings.Apttus_Config2__SearchAttributeDefaultPage__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__ProductAttributeDetailPage__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__SearchAttributeValuePage__c}"/>
+                    <apex:pageBlockSectionItem helpText="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__OptionsPageDefault__c.inlineHelpText}">
+                        <apex:outputLabel value="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__OptionsPageDefault__c.Label}"/>
+                        <apex:selectList value="{!settings.Apttus_Config2__OptionsPageDefault__c}" size="1">
+                            <apex:selectOptions value="{!ObjectPageDefault}"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem helpText="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__ResolveConfigurationPageDefault__c.inlineHelpText}">
+                        <apex:outputLabel value="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__ResolveConfigurationPageDefault__c.Label}"/>
+                        <apex:selectList value="{!settings.Apttus_Config2__ResolveConfigurationPageDefault__c}" size="1">
+                            <apex:selectOptions value="{!ResolveConfigurationPageDefault}"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection columns="2" title="{!$Label.apttus_config2__PricingSettings}" collapsible="true">
+                    <apex:inputField value="{!settings.Apttus_Config2__DeferPricingUntilCart__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__EnableAggregatePricing__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__EnableAutoReprice__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__EnableExternalPricing__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__EnableMatrixPricingForOptions__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__MiscChargeTypes__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__MaxAdjustmentLines__c}"/>
+                    <apex:pageBlockSectionItem helpText="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__TotalingGroupType__c.inlineHelpText}">
+                        <apex:outputLabel value="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__TotalingGroupType__c.Label}"/>
+                        <apex:selectList value="{!settings.Apttus_Config2__TotalingGroupType__c}" size="1">
+                            <apex:selectOptions value="{!TotalingGroupType}"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                    <apex:inputField value="{!settings.Apttus_Config2__ProductTotalingHierarchy__c}"/>
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection title="{!$Label.apttus_config2__ConstraintRuleSettings}" columns="2" collapsible="false">
+                    <apex:inputField value="{!settings.Apttus_Config2__ShowInfoInHeader__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__MaxConstraintRulesRoundTrip__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__HideResolveConfigLink__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__StaticCriteriaFields__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__AlertSelectedExclude__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__DeferValidationCheckInBundles__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__DisableConstraintRules__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__EnableDefaultingForProducts__c}"/>
+                </apex:pageBlockSection>
+                         
+                <apex:pageBlockSection columns="2" title="{!$Label.apttus_config2__CartRelatedSettings}" collapsible="true">
+                	<apex:inputField value="{!settings.Apttus_Config2__DisplayCartActionsAsDropdown__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__ActionsColumnPosition__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__BypassShoppingCart__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__HideSubtotalsInCart__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__KeepAbandonedCarts__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__HideCopyAction__c}"/>
+                	<apex:inputField value="{!settings.Apttus_Config2__SaveOnAllActions__c}"/>
+                    <!-- use display column settings 
+                    <apex:inputField value="{!settings.ViewCartCustomFields2__c}"/>
+                    <apex:inputField value="{!settings.ViewCartCustomFields__c}"/>
+                    <apex:inputField value="{!settings.ViewCartTotalCustomFields__c}"/>
+                    -->
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection title="{!$Label.apttus_config2__PrecisionSettings}" columns="2" collapsible="false">
+                    <apex:inputField value="{!settings.Apttus_Config2__CurrencyFieldPrecision__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__PercentageFieldPrecision__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__QuantityFieldPrecision__c}"/>
+                </apex:pageBlockSection>
+                <!-- moved to installed products settings page 
+                <apex:pageBlockSection title="{!$Label.InstalledProductsSettings}" columns="2" collapsible="false">
+                    <apex:inputField value="{!settings.DirectConfigureAssetActions__c}"/>
+                    <apex:inputField value="{!settings.HideAssetActions__c}"/>
+                </apex:pageBlockSection>
+                -->
+                <apex:pageBlockSection columns="2" title="{!dataSetName}" collapsible="false">
+                    <apex:inputField value="{!settings.Apttus_Config2__BaseProductRelationField__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__InstanceUrl__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__RunFinalizationTaskInAsyncMode__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__ShowHeader__c}"/>
+                	<apex:inputField value="{!settings.Apttus_Config2__FixedButtonBar__c}"/>
+                	<apex:inputField value="{!settings.Apttus_Config2__CSSOverride__c}"/>
+                </apex:pageBlockSection>
+
+                <apex:pageBlockSection title="{!$Label.apttus_config2__MiscellaneousSettings}" columns="2" collapsible="false">
+                    <apex:inputField value="{!settings.Apttus_Config2__OptionLineItemColumns__c}"/>
+                    <apex:pageBlockSectionItem helpText="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__SearchCategoryDefault__c.inlineHelpText}">
+                        <apex:outputLabel value="{!$ObjectType.Apttus_Config2__ConfigSystemProperties__c.Fields.Apttus_Config2__SearchCategoryDefault__c.Label}"/>
+                        <apex:selectList value="{!settings.Apttus_Config2__SearchCategoryDefault__c}" size="1">
+                            <apex:selectOptions value="{!SearchCategoryDefault}"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:inputField value="{!settings.Apttus_Config2__OptionProductColumns__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__CascadeSharedAttributeUpdates__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__AutoSyncOnCartApproval__c}"/>
+                    <apex:inputField value="{!settings.Apttus_Config2__AutoFinalizeOnCartApproval__c}"/>
+                	<!-- used in older installed products page 
+                    <apex:inputField value="{!settings.AlertInclude__c}"/>
+                    -->
+                </apex:pageBlockSection>
+
+            </apex:outputPanel>
+    
+        </apex:pageBlock>           
+    
+    </apex:form>
+</apex:page>

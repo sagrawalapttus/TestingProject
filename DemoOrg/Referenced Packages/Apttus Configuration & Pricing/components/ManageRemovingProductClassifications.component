@@ -1,0 +1,189 @@
+<!-- 
+    Apttus Config & Pricing
+    ProductClassificationSearch
+     
+    @2010-2011 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.ProductClassificationSearchController"
+    allowDML="true">
+
+    <!--  page controller - specify page controller associated with the component. The page controller is
+    used to locate the select controller to delegate the select and cancel actions to. 
+    -->
+    <apex:attribute name="pageController" description="Page Controller"
+        type="Apttus_Config2.PageControllerBase" required="true" assignTo="{!pageControllerProp}" />
+
+    <!--  selectButtonLabel - specify a label to override the select button label. -->
+    <apex:attribute name="selectButtonLabel"
+        description="Label for the select button" type="String"
+        required="false" assignTo="{!selectButtonLabelProp}" />
+
+    <!--  tableTitle - specify a label to override the list title. -->
+    <apex:attribute name="tableTitle"
+        description="Title for list" type="String"
+        required="false" assignTo="{!tableTitleProp}" />
+
+    <!--  autoSearch - specify here or provide as a parameter to the component. -->
+    <apex:attribute name="autoSearch" description="Auto Search Indicator"
+        type="Boolean" required="false" default="true"
+        assignTo="{!autoSearchProp}" />
+
+    <!--  preFilterXml - specify here or provide as a parameter to the component. -->
+    <apex:attribute name="preFilterXml"
+        description="Pre-filter for auto search" type="String"
+        required="false" assignTo="{!preFilterXmlProp}" />
+
+    <!--  customFieldNamesCsv - specify here or provide as a parameter to the component. -->
+    <apex:attribute name="customFieldNamesCsv"
+        description="Comma separated list of custom field names" type="String"
+        required="false" assignTo="{!customFieldNamesCsvProp}" />
+
+    <apex:pageBlock id="idProductClassificationsBlock"
+        rendered="{!isEnabled}">
+	    <script>
+			 //cannot define var in js for IE8
+			 var aptAddedCheckboxes = [];
+		</script>	     
+
+        <apex:pageBlockButtons location="both">
+            <apex:commandButton value="{!selectButtonLabel}" action="{!doOk}"
+								rerender="idResultSetPanel"
+	        					onClick="loading('.save-btn');"
+								styleClass="save-btn"
+								onComplete="loadComplete('.save-btn');parent.rerenderframePanel();parent.rerenderTree();" />
+        </apex:pageBlockButtons>
+
+        <apex:outputPanel id="idResultSetPanel">
+            <apex:outputPanel id="idResultStatsPanel" styleClass="bNext"
+                layout="block" style="text-align: right;"
+                rendered="{!hasProductClassifications}">
+                <font size="1px">{!$Label.PageNbr}:&nbsp;{!currentPageNumber}&nbsp;{!$Label.OutOf}&nbsp;{!totalPages}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <apex:outputPanel id="idNavigationPanel" styleClass="next"
+                        layout="block" rendered="{!OR(hasNextPage,hasPreviousPage)}">
+                        <apex:outputPanel rendered="{!NOT(hasPreviousPage)}" styleClass="greyedLink">&lt;{!$Label.PreviousPage}</apex:outputPanel>
+                        <apex:commandLink rendered="{!hasPreviousPage}" action="{!previousPage}" reRender="idProductClassificationsBlock">&lt;{!$Label.PreviousPage}</apex:commandLink>
+                        <span> | </span>
+                        <apex:outputPanel rendered="{!NOT(hasNextPage)}" styleClass="greyedLink">{!$Label.NextPage}&gt;</apex:outputPanel>
+                        <apex:commandLink rendered="{!hasNextPage}" action="{!nextPage}" reRender="idProductClassificationsBlock">{!$Label.NextPage}&gt;</apex:commandLink>
+                    </apex:outputPanel> 
+                </font>
+            </apex:outputPanel>
+
+            <apex:outputPanel id="idRecordSetPanel">
+                <apex:pageBlockSection title="{!tableTitle}"
+                    columns="1" collapsible="true">
+                    <apex:pageBlockTable value="{!productClassifications}"
+                        var="productClassificationInfo" width="100%"
+                        rendered="{!hasProductClassifications}">
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox id="idSelectAllAdded"
+                                onclick="aptToggleSelectAll(this, 'added')" 
+                                onchange="aptToggleSelectAll(this, 'added')"/>
+                            </apex:facet>
+                            <apex:inputCheckbox value="{!productClassificationInfo.selected}" id="idSelectAdded"
+                              	onchange="aptUncheckSelectAll('added');"/>
+                            <script>aptAddedCheckboxes.push("{!$Component.idSelectAdded}");</script>  	
+                        </apex:column>
+				
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:commandLink value="{!$ObjectType.Product2.Fields.Name.Label}"
+                                    action="{!doSort}" reRender="idProductClassificationsBlock">
+                                    <apex:param name="sortFieldName" value="Apttus_Config2__ProductId__r.Name" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}"
+                                        title="{!$Label.apttus_config2__SortedAscending}"
+                                        alt="{!$Label.apttus_config2__SortedAscending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.Name' && sortOrder != 'DESC'}" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}"
+                                        title="{!$Label.apttus_config2__SortedDescending}"
+                                        alt="{!$Label.apttus_config2__SortedDescending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.Name' && sortOrder == 'DESC'}" />
+                                </apex:commandLink>
+                            </apex:facet>
+                            <apex:outputLink value="/{!productClassificationInfo.productClassificationSO.Apttus_Config2__ProductId__c}"
+                                target="_blank">{!productClassificationInfo.productClassificationSO.ProductId__r.Name}</apex:outputLink>
+                        </apex:column>
+
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:commandLink value="{!$ObjectType.Product2.Fields.ProductCode.Label}"
+                                    action="{!doSort}" reRender="idProductClassificationsBlock">
+                                    <apex:param name="sortFieldName" value="Apttus_Config2__ProductId__r.ProductCode" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}"
+                                        title="{!$Label.apttus_config2__SortedAscending}"
+                                        alt="{!$Label.apttus_config2__SortedAscending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.ProductCode' && sortOrder != 'DESC'}" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}"
+                                        title="{!$Label.apttus_config2__SortedDescending}"
+                                        alt="{!$Label.apttus_config2__SortedDescending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.ProductCode' && sortOrder == 'DESC'}" />
+                                </apex:commandLink>
+                            </apex:facet>
+                            <apex:outputLink value="/{!productClassificationInfo.productClassificationSO.Apttus_Config2__ProductId__c}"
+                                target="_blank">{!productClassificationInfo.productClassificationSO.ProductId__r.ProductCode}</apex:outputLink>
+                        </apex:column>
+
+                        <apex:column value="{!productClassificationInfo.productClassificationSO.ProductId__r.Description}">
+                            <apex:facet name="header">
+                                <apex:commandLink value="{!$ObjectType.Product2.Fields.Description.Label}"
+                                    action="{!doSort}" reRender="idProductClassificationsBlock">
+                                    <apex:param name="sortFieldName" value="Apttus_Config2__ProductId__r.Description" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}"
+                                        title="{!$Label.apttus_config2__SortedAscending}"
+                                        alt="{!$Label.apttus_config2__SortedAscending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.Description' && sortOrder != 'DESC'}" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}"
+                                        title="{!$Label.apttus_config2__SortedDescending}"
+                                        alt="{!$Label.apttus_config2__SortedDescending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.Description' && sortOrder == 'DESC'}" />
+                                </apex:commandLink>
+                            </apex:facet>
+                        </apex:column>
+
+                        <apex:column value="{!productClassificationInfo.productClassificationSO.ProductId__r.Family}">
+                            <apex:facet name="header">
+                                <apex:commandLink value="{!$ObjectType.Product2.Fields.Family.Label}"
+                                    action="{!doSort}" reRender="idProductClassificationsBlock">
+                                    <apex:param name="sortFieldName" value="Apttus_Config2__ProductId__r.Family" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}"
+                                        title="{!$Label.apttus_config2__SortedAscending}"
+                                        alt="{!$Label.apttus_config2__SortedAscending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.Family' && sortOrder != 'DESC'}" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}"
+                                        title="{!$Label.apttus_config2__SortedDescending}"
+                                        alt="{!$Label.apttus_config2__SortedDescending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.Family' && sortOrder == 'DESC'}" />
+                                </apex:commandLink>
+                            </apex:facet>
+                        </apex:column>
+
+                        <apex:column value="{!productClassificationInfo.productClassificationSO.ProductId__r.Apttus_Config2__ConfigurationType__c}">
+                            <apex:facet name="header">
+                                <apex:commandLink value="{!$ObjectType.Product2.Fields.Apttus_Config2__ConfigurationType__c.Label}"
+                                    action="{!doSort}" reRender="idProductClassificationsBlock">
+                                    <apex:param name="sortFieldName" value="Apttus_Config2__ProductId__r.ConfigurationType__c" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortAsc}"
+                                        title="{!$Label.apttus_config2__SortedAscending}"
+                                        alt="{!$Label.apttus_config2__SortedAscending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.ConfigurationType__c' && sortOrder != 'DESC'}" />
+                                    <apex:image url="{!$Resource.Apttus_Config2__Image_SortDesc}"
+                                        title="{!$Label.apttus_config2__SortedDescending}"
+                                        alt="{!$Label.apttus_config2__SortedDescending}"
+                                        rendered="{!sortFieldName == 'Apttus_Config2__ProductId__r.ConfigurationType__c' && sortOrder == 'DESC'}" />
+                                </apex:commandLink>
+                            </apex:facet>
+                        </apex:column>
+
+                    </apex:pageBlockTable>
+                    <apex:outputText value="{!$Label.apttus_config2__NoRecordsToDisplay}"
+                        rendered="{!NOT(hasProductClassifications)}" />
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+
+        </apex:outputPanel>
+		
+    </apex:pageBlock>
+
+</apex:component>

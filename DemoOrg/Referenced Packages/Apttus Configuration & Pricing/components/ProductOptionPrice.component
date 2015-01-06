@@ -1,0 +1,126 @@
+<!-- 
+    Apttus Config & Pricing
+    ProductOptionPrice
+     
+    @2010-2013 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.ProductOptionPriceController" >	
+    				
+    <!--  price list id - specify the id of the price list associated with the option price. -->
+    <apex:attribute name="priceListId" 
+    				description="Price List" 
+    				type="ID" 
+    				required="true" 
+    				assignTo="{!priceListIdProp}" />
+	
+	<!--  parent product id - specify the id of the parent product associated with the option.-->
+    <apex:attribute name="parentProductId" 
+    				description="Parent Product" 
+    				type="ID" 
+    				required="true" 
+    				assignTo="{!parentProductIdProp}" />
+    				
+	<!--  page controller - specify page controller associated with the component. -->	
+	<apex:attribute name="pageController" 
+					description="Page Controller" 
+					type="Apttus_Config2.PageControllerBase" 
+					required="true" 
+					assignTo="{!pageControllerProp}" />
+					
+ 	<apex:stylesheet value="{!$Resource.Apttus_Config2__ConfigStyles}" />
+	
+	<apex:pageBlock id="idOptionPriceBlock" mode="edit" rendered="{!isEnabled && NOT(isCriteriaEditMode)}" >
+	   
+	    <apex:pageBlockSection id="idOptionPricesSection" 
+	    					   title="{!$ObjectType.Apttus_Config2__ProductOptionPrice__c.Label & ' ' & $Label.apttus_config2__Edit}"  
+	    					   columns="1" 
+	    					   collapsible="false" >
+	    					   
+	        <apex:pageBlockTable value="{!optionPrices}" 
+	        					 var="optPriceInfo" 
+	        					 columns="14" 
+	        					 rowClasses="oddRow,evenRow" 
+	        					 rendered="{!hasOptionPrices}" >
+	        	
+	        	<apex:column headerValue="{!$ObjectType.Apttus_Config2__ProductOptionPrice__c.Fields.Apttus_Config2__Sequence__c.Label}" 
+	        				 width="5%" >
+	        		<apex:outputField value="{!optPriceInfo.optPriceSO.Apttus_Config2__Sequence__c}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Apttus_Config2__ProductOptionGroup__c.Fields.Apttus_Config2__OptionGroupId__c.Label}" 
+	        				 width="10%" >
+	        		<apex:outputText value="{!optPriceInfo.optGroupLabel}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$Label.apttus_config2__Option}" 
+	        				 width="20%" >
+	        		<apex:outputField value="{!optPriceInfo.optItemSO.ProductId__r.Name}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Product2.Fields.ProductCode.Label}" 
+	        				 width="5%" >
+	        		<apex:outputField value="{!optPriceInfo.optItemSO.ProductId__r.ProductCode}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Apttus_Config2__ProductOptionPrice__c.Fields.Apttus_Config2__ChargeType__c.Label}" 
+	        				 width="7%" >
+	        		<apex:outputField value="{!optPriceInfo.optPriceSO.Apttus_Config2__ChargeType__c}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceListItem__c.Fields.Apttus_Config2__PriceType__c.Label}" 
+	        				 width="7%" >
+	        		<apex:outputField value="{!optPriceInfo.optItemSO.Apttus_Config2__PriceType__c}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceListItem__c.Fields.Apttus_Config2__PriceMethod__c.Label}" 
+	        				 width="7%" >
+	        		<apex:outputField value="{!optPriceInfo.optItemSO.Apttus_Config2__PriceMethod__c}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Apttus_Config2__PriceListItem__c.Fields.Apttus_Config2__ListPrice__c.Label}" 
+	        				 width="7%" >
+	        		<apex:outputField value="{!optPriceInfo.optItemSO.Apttus_Config2__ListPrice__c}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Apttus_Config2__ProductOptionPrice__c.Fields.Apttus_Config2__AdjustmentAmount__c.Label}" 
+							 width="7%" >
+	        		<apex:inputField value="{!optPriceInfo.optPriceSO.Apttus_Config2__AdjustmentAmount__c}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Apttus_Config2__ProductOptionPrice__c.Fields.Apttus_Config2__AdjustmentType__c.Label}" 
+							 width="5%" >
+	        		<apex:inputField value="{!optPriceInfo.optPriceSO.Apttus_Config2__AdjustmentType__c}" />
+				</apex:column>
+			   	
+			   	<apex:column headerValue="{!$ObjectType.Apttus_Config2__ProductOptionPrice__c.Fields.Apttus_Config2__PriceIncludedInBundle__c.Label}"  
+							 width="5%" >
+	        		<apex:inputCheckbox value="{!optPriceInfo.optPriceSO.Apttus_Config2__PriceIncludedInBundle__c}" 
+	        							selected="{!optPriceInfo.optPriceSO.Apttus_Config2__PriceIncludedInBundle__c}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$Label.apttus_config2__RollupMethod}" 
+	        				 width="5%" >
+	        		<apex:inputField value="{!optPriceInfo.optPriceSO.Apttus_Config2__RollupPriceMethod__c}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Apttus_Config2__ProductOptionPrice__c.Fields.Apttus_Config2__AllowManualAdjustment__c.Label}" 
+							 width="5%" >
+	        		<apex:inputCheckbox value="{!optPriceInfo.optPriceSO.Apttus_Config2__AllowManualAdjustment__c}" 
+	        							selected="{!optPriceInfo.optPriceSO.Apttus_Config2__AllowManualAdjustment__c}" />
+				</apex:column>
+				
+				<apex:column headerValue="{!$ObjectType.Apttus_Config2__ProductOptionPrice__c.Fields.Apttus_Config2__AllocateGroupAdjustment__c.Label}" 
+							 width="5%" >
+	        		<apex:inputCheckbox value="{!optPriceInfo.optPriceSO.Apttus_Config2__AllocateGroupAdjustment__c}" 
+	        							selected="{!optPriceInfo.optPriceSO.Apttus_Config2__AllocateGroupAdjustment__c}" />
+				</apex:column>
+				
+	        </apex:pageBlockTable>
+	        
+	        <apex:outputText value="{!$Label.apttus_config2__NoRecordsToDisplay}" rendered="{!NOT(hasOptionPrices)}" />
+	    </apex:pageBlockSection>
+	    
+	</apex:pageBlock>
+	   
+</apex:component>

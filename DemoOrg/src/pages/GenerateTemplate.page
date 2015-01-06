@@ -1,0 +1,151 @@
+<apex:page sidebar="false"  showHeader="false" renderAs="pdf" cache="false" 
+           controller="generateTemplatecontroller" action="{!RenderPDF}">
+    
+    <html>
+        <HEAD>
+            <style type="text/css" >           
+                
+                .headerRow .TableTitle {
+                background-color: #F0F8FF !important;
+                background-image: none !important; //This is needed if you want to overwrite the header background
+                color: #CC0000 !important; 
+                font-size:50px !important; 
+                
+            </style>
+        </HEAD>
+        
+        <body>
+            <div style="border:thin" class="header">
+                <table width="100%" >
+                    <tr style="font-size:16px">
+                        <td width="50%"> 
+                            <table border="1" style="border-collapse: collapse" cellpadding="3" cellspacing="3" width="70%">
+                                <tr><td width="50%" colspan="2" style="text-align:center" bgcolor="#d3d3d3">QUOTATION</td></tr>
+                                <tr><td width="25%"><b>Number</b></td><td width="25%">{!oProposal.Name}</td></tr>
+                                <tr><td><b>Delivery</b></td><td>See "Delivery" Below</td></tr>
+                            </table>            
+                            <table width="70%">
+                                <tr>
+                                    <td width="50%" style="text-align:center;vertical-align:top">TO:</td>
+                                    <td width="50%">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <b>Andy Philips</b>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>Broad Institude</b>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>75 Ames Street</b>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>Cambridge, MA 0241</b>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>Tel: 203-868-9817 philips@broadinstitude.org</b>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="50%">                   
+                            <table width="100%">
+                                <tr style="font-size:12px">
+                                    <td width="10%">
+                                        &nbsp;
+                                    </td>
+                                    <td width="90%">
+                                        <table >
+                                            <tr>
+                                                <td width="50%">&nbsp;
+                                                </td>
+                                                <td width="50%">
+                                                    12 FORTUNE DRIVE
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;
+                                                </td>
+                                                <td>
+                                                    BILLERICA, MA 01821-3991
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;
+                                                </td>
+                                                <td>
+                                                    TEL (978) 667-9580
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;
+                                                </td>
+                                                <td>
+                                                    FAX (978) 667-0985
+                                                </td>
+                                            </tr>
+                                            <tr><td>&nbsp;</td></tr>
+                                            <tr>
+                                                <td width="50%" style="text-align:right">
+                                                    <b>Date</b>
+                                                </td>
+                                                <td width="50%">
+                                                    October 22,2014
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:right">
+                                                    <b>Sales Representative</b>
+                                                </td>
+                                                <td>
+                                                    Paul Cope
+                                                </td>
+                                            </tr>                                
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>               
+            </div>
+            <br/><br/>
+            <div class="content">
+                <apex:pageBlock >
+                    <apex:pageBlockTable value="{!oLineItem}" var="oLineItem1"> 
+                        <apex:column headerValue="Item" headerClass="TableTitle" value="{!oLineItem1.Id}"/>
+                        <apex:column headerValue="Description" value="{!oLineItem1.Description_RTF__c}"/>
+                        <apex:column headerValue="Unit Price" value="{!oLineItem1.Apttus_Proposal__Unit_Price__c}"/>
+                    </apex:pageBlockTable>                
+                </apex:pageBlock>
+                
+            </div>
+            
+            <div id="QuoteIdfooter" class="footer">
+                <table width="100%">
+                    <tr style="font-size:12px">
+                        <td>
+                            QUOTATION VALID ONLY WHEN SIGNED BY A CORPORATE OFFICE
+                        </td>
+                        <td style="text-align:right">
+                            BY: Paul Cope
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+        </body>
+    </html>   
+    
+</apex:page>

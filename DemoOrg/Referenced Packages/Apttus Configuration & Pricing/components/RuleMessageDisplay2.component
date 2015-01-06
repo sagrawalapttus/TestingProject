@@ -1,0 +1,251 @@
+<!-- 
+    Apttus Config & Pricing
+    RuleMessageDisplay
+     
+    @2010-2011 Apttus Inc. All rights reserved.
+
+ -->
+<apex:component controller="Apttus_Config2.RuleMessageDisplayController" access="global" allowDML="true">
+    <apex:attribute name="configId" 
+                    description="Config Id" 
+                    type="ID" 
+                    required="true" 
+                    assignTo="{!ConfigurationId}" 
+                    access="global" />
+    <apex:attribute name="contextLineNumber" 
+                    description="Context Line Number" 
+                    type="Integer" 
+                    required="false" 
+                    assignTo="{!ContextLineNumberProp}" 
+                    access="global" />
+    <apex:attribute name="isInCart" 
+                    description="Is it displayed in cart" 
+                    type="Boolean" 
+                    required="false" 
+                    assignTo="{!isInCartProp}" 
+                    access="global" />
+    <apex:attribute name="isHideAll" 
+                    description="Is it displayed in resolve page" 
+                    type="Boolean" 
+                    required="false" 
+                    assignTo="{!isHideAllProp}" 
+                    access="global" />
+    <apex:attribute name="isResolvePage" 
+					description="Is it displayed in resolve page" 
+					type="Boolean" 
+					required="false" 
+					assignTo="{!isResolvePageProp}" 
+					access="global" />
+    <apex:attribute name="hasChoice" 
+                    description="Whether choice panel has products" 
+                    type="Boolean" 
+                    required="false" 
+                    assignTo="{!hasChoiceProp}" 
+                    access="global" />                  
+    <apex:attribute name="isAvoidRoundTrip" 
+                    description="Whether to avoid round trip" 
+                    type="Boolean" 
+                    required="false" 
+                    assignTo="{!isAvoidRoundTripProp}" 
+                    access="global" />
+    <apex:attribute name="hasPendingDefault" 
+                    description="Whether all default options are added" 
+                    type="Boolean" 
+                    required="false" 
+                    assignTo="{!hasPendingDefaultProp}" 
+                    access="global"
+                    />                  
+   
+    <apex:outputPanel layout="block" id="idRuleMessageBlock">
+        <!-- Error Type Message -->             
+        <apex:outputPanel id="idRuleErrorMessage" style="width: 100%; padding-bottom: 3px;" rendered="{!hasErrorTypeActionInfos && (isHideAll == false)}">
+            <div style="width: 100%; border: solid 1px red; background-color: lightyellow; padding-left: 0px;">
+                <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                    <tr> 
+                        <td width="1%" style="background-color: #F75D59;" rowspan="1" valign="top" >
+                            <apex:image url="{!$Resource.Apttus_Config2__Image_RuleError}"/>
+                        </td>
+                        <td width="98%" style="background-color: #F75D59;"><span style="font-weight: bold; font-size: 1.2em; text-align: left; padding-left: 6px; color: white;">{!$Label.RuleError}</span></td>
+                        <td width="1%" valign="top" style="text-align: right; background-color: #F75D59;">
+                            <apex:image url="{!$Resource.Apttus_Config2__Image_Down}" rendered="{!isCollapseErrorMessage == false}">
+                                <apex:actionSupport event="onclick" 
+                                                    action="{!doCollapseErrorMessage}" 
+                                                    rerender="idRuleErrorMessage" status="collapseStatus" />    
+                            </apex:image>
+                            <apex:image url="{!$Resource.Apttus_Config2__Image_Left}" rendered="{!isCollapseErrorMessage == true}">
+                                <apex:actionSupport event="onclick" 
+                                                    action="{!doExpandErrorMessage}" 
+                                                    rerender="idRuleErrorMessage" status="expandStatus" />  
+                            </apex:image>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <apex:outputPanel rendered="{!isShowResolveErrorLink == true}">
+                                <div style="padding-left: 1em; padding-top: 0.5em; padding-bottom: {!IF(isCollapseErrorMessage, '0.5em', '0')};">
+                                    <apex:commandLink value="{!$Label.apttus_config2__ResolveConfigurationErrors}" action="{!showResolveError}"/>
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!isCollapseErrorMessage == false}">
+                                <apex:dataList value="{!ErrorTypeActionInfos}" var="actionInfo" id="theRepeat" style="padding: 1px;margin-left:0.8em;">
+                                    <apex:outputText value="{!actionInfo.Apttus_Config2__Message__c}" id="theValue"/>
+                                </apex:dataList>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+        </apex:outputPanel>
+        <!-- Warning Type Message -->               
+        <apex:outputPanel id="idRuleWarningMessage" layout="block" style="padding-bottom: 3px;" rendered="{!hasWarningTypeActionInfos && (isHideAll == false)}">
+            <div style="border: solid 1px orange; background-color: lightyellow; padding-left: 0px;">
+                <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                    <tr> 
+                        <td width="1%" rowspan="1" valign="top" style="background-color: #FFE87C;">
+                            <apex:image url="{!$Resource.Apttus_Config2__Image_RuleWarning}"/>
+                        </td>
+                        <td width="98%" style="background-color: #FFE87C;"><span style="color: black; font-weight: bold; font-size: 1.2em; text-align: left; padding-left: 6px;">{!$Label.RuleWarning}</span></td>
+                        <td width="1%" valign="top" style="background-color: #FFE87C; text-align: right;">
+                            <apex:image url="{!$Resource.Apttus_Config2__Image_Down}" rendered="{!isCollapseWarningMessage == false}">
+                                <apex:actionSupport event="onclick" 
+                                                    action="{!doCollapseWarningMessage}" 
+                                                    rerender="idRuleWarningMessage" status="collapseStatus" />  
+                            </apex:image>
+                            <apex:image url="{!$Resource.Apttus_Config2__Image_Left}" rendered="{!isCollapseWarningMessage == true}">
+                                <apex:actionSupport event="onclick" 
+                                                    action="{!doExpandWarningMessage}" 
+                                                    rerender="idRuleWarningMessage" status="expandStatus" />    
+                            </apex:image>
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td colspan="3">
+                            <apex:outputPanel rendered="{!isShowResolveWarningLink == true}">
+                                <div style="padding-left: 1em; padding-top: 0.5em; padding-bottom: {!IF(isCollapseWarningMessage, '0.5em', '0')};">
+                                    <apex:commandLink value="{!$Label.apttus_config2__ResolveConfigurationWarnings}" action="{!showResolveWarning}"/>
+                                </div>  
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!isCollapseWarningMessage == false}">
+                                <apex:dataList value="{!WarningTypeActionInfos}" var="actionInfo" id="theRepeat2" style="padding: 1px;">
+                                    <apex:outputText value="{!actionInfo.Apttus_Config2__Message__c}" id="theValue"/>&nbsp;&nbsp;&nbsp;<apex:image url="{!$Resource.Apttus_Config2__Image_Hide}" title="{!$Label.apttus_config2__HideMessage}" onclick="aptHideMessage(this, '{!actionInfo.Id}');return false;"/>
+                                </apex:dataList>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+        </apex:outputPanel>
+        <!-- Info Type Message -->              
+        <apex:outputPanel id="idRuleInfoMessage" style="width: 100%; padding-bottom: 3px;" rendered="{!hasInfoTypeActionInfos && (isHideAll == false)}">
+            <div style="width: 100%; border: solid 1px green; background-color: white; padding-left: 0px;">
+                <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                    <tr> 
+                        <td width="1%" rowspan="1" valign="top" style="background-color: #AFDCEC;">
+                            <apex:image url="{!$Resource.Apttus_Config2__Image_RuleInfo}"/>
+                        </td>
+                        <td width="98%" style="background-color: #AFDCEC;"><span style="color: black; font-weight: bold; font-size: 1.2em; text-align: left; padding-left: 6px;">{!$Label.RuleInformation}</span></td>
+                        <td width="1%" valign="top" style="background-color: #AFDCEC; text-align: right;">
+                            <apex:image url="{!$Resource.Apttus_Config2__Image_Down}" rendered="{!isCollapseInfoMessage == false}">
+                                <apex:actionSupport event="onclick" 
+                                                    action="{!doCollapseInfoMessage}" 
+                                                    rerender="idRuleInfoMessage" status="collapseStatus" /> 
+                            </apex:image>
+                            <apex:image url="{!$Resource.Apttus_Config2__Image_Left}" rendered="{!isCollapseInfoMessage == true}">
+                                <apex:actionSupport event="onclick" 
+                                                    action="{!doExpandInfoMessage}" 
+                                                    rerender="idRuleInfoMessage" status="expandStatus" />   
+                            </apex:image>
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td colspan="3">
+                            <apex:outputPanel rendered="{!isShowResolveInfoLink == true}">
+                                <div style="padding-left: 1em; padding-top: 0.5em; padding-bottom: {!IF(isCollapseInfoMessage, '0.5em', '0')};">
+                                    <apex:commandLink value="{!$Label.apttus_config2__ViewAutoSelectedProducts}" action="{!showResolveInfo}"/>
+                                </div>  
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!isCollapseInfoMessage == false}">
+                                <apex:dataList value="{!InfoTypeActionInfos}" var="actionInfo" id="theRepeat3" style="padding: 1px;">
+                                    <apex:outputText value="{!actionInfo.Apttus_Config2__Message__c}" id="theValue"/>&nbsp;&nbsp;&nbsp;<apex:image url="{!$Resource.Apttus_Config2__Image_Hide}" title="{!$Label.apttus_config2__HideMessage}" onclick="aptHideMessage(this, '{!actionInfo.Id}');return false;"/>
+                                </apex:dataList>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+        </apex:outputPanel>
+        <apex:actionStatus id="collapseStatus" startText="{!$Label.apttus_config2__Hiding}" stopText=""/>
+        <apex:actionStatus id="expandStatus" startText="{!$Label.apttus_config2__Showing}" stopText=""/>
+        <apex:outputPanel id="idLoadingMore" style="width: 100%; padding-bottom: 3px;">
+        </apex:outputPanel>
+    </apex:outputPanel>
+    
+    <script>
+        needMoreProcessing = false;
+        var showChoicePanel = false;
+        var skipPricing = ({!isInCartProp} || {!IsDeferPricing}); //skip pricing if it is in cart or defer pricing setting is used
+        
+        j$.APTTUS.LineNumbersAwaitingPrice = {!LineNumbersAwaitingPrice};
+            
+        //hide border
+        document.getElementById("{!$Component.idRuleMessageBlock}").className = undefined;
+        if({!NOT(HasMessageProp)}){
+            document.getElementById("{!$Component.idRuleMessageComponent}").style.display = "none";
+        }
+        if({!(IsRoundTripAllowed)}){
+            needMoreProcessing = true; //constrols waitPanel hide through onActionComplete() function
+        }
+        
+        j$(function(){
+        	if ({!HasPendingDefaultProp} == true) {
+				//console.log('calling... invokeDoAddDefaultOptions');
+				invokeDoAddDefaultOptions();
+				
+			} else {
+	        	if(needMoreProcessing){
+	        		//console.log('calling... invokeDoProcessMoreRules');
+                    if (typeof invokeDoProcessMoreRules == 'function') { 
+                        invokeDoProcessMoreRules();
+                    }					
+				}
+			
+				if(needMoreProcessing || {!NOT(hasChoiceProp)}){
+					//console.log('calling... hideRulePrompt');
+					j$.APTTUS.hideRulePrompt();
+		            
+		        }else if({!hasChoiceProp == true}){
+		        	//console.log('calling... showRulePrompt');
+		            showChoicePanel = true;
+                    if(!j$.APTTUS.rulePromptDialog 
+                    || !j$.APTTUS.rulePromptDialog.dialog("isOpen") ) { // queue opening of constraint dialog
+                        j$.aptActionFunctionQueue.execute(j$.APTTUS.showRulePrompt, null, null, 'noLoading');
+                    }
+		        } else if({!hasChoiceProp == false}) {
+                    // remove show rule prompt from queue
+                    j$.aptActionFunctionQueue.removeFromQueue(j$.APTTUS.showRulePrompt);
+                }
+		        
+		        // check and perform pricing
+		        if ((needMoreProcessing == false) 
+		        		&& (skipPricing == false) 
+		        		&& (j$.APTTUS.LineNumbersAwaitingPrice.length > 0) 
+		            	&& (j$.APTTUS.ApplyAutomaticPricing == true)) {
+		            
+		            doAutomaticPricing();
+		            
+		        }
+	        
+	        }
+	        
+        });
+            
+    </script>
+    <!-- Adding for required SFDC javascript insert so it is not inserted with other tags -->
+    <div style="display:none;">
+	    <apex:pageBlock >
+	    </apex:pageBlock>
+    </div>
+</apex:component>

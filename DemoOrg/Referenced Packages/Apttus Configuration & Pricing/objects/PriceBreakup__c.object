@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Represents the price breakup of a product/service</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fieldSets>
+        <fullName>RelatedPriceBreakupDisplayFieldSet</fullName>
+        <availableFields>
+            <field>BasePrice__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Name</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>NetUnitPrice__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>RelatedBasePrice__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>RelatedExtendedPrice__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>RelatedListPrice__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>RelatedSellingFrequency__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>RelatedSellingTerm__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SubType__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Type__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <description>RelatedPriceBreakupDisplay</description>
+        <displayedFields>
+            <field>Sequence__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>BreakupType__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>RelatedProductId__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>RelatedQuantity__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>RelatedChargeType__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>RelatedStartDate__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>RelatedEndDate__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>RelatedNetPrice__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>Related Price Breakup Display FieldSet</label>
+    </fieldSets>
+    <fields>
+        <fullName>BasePrice__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The computed base price</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The computed base price</inlineHelpText>
+        <label>Base Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>BreakupType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The price break type</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The price break type</inlineHelpText>
+        <label>Breakup Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Related Price</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Tier Price</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Total</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>LineItemId__c</fullName>
+        <deprecated>false</deprecated>
+        <description>ID of the associated line item</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the associated line item</inlineHelpText>
+        <label>Line Item</label>
+        <referenceTo>LineItem__c</referenceTo>
+        <relationshipLabel>Price Breakups</relationshipLabel>
+        <relationshipName>PriceBreakups</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>NetUnitPrice__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The computed net unit price</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The computed net unit price</inlineHelpText>
+        <label>Net Unit Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>RelatedBasePrice__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The related base price computed based on the related product/service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The related base price computed based on the related product/service</inlineHelpText>
+        <label>Related Base Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>RelatedChargeType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The charge type associated with the related product/service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The charge type associated with the related product/service</inlineHelpText>
+        <label>Related Charge Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Adjustment</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Implementation Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Installation Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>License Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Maintenance Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sales Tax</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Shipping &amp; Handling</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Standard Price</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Subscription Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>RelatedEndDate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The end date associated with the related product/service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The end date associated with the related product/service</inlineHelpText>
+        <label>Related End Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>RelatedExtendedPrice__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The related extended price is Quantity X Term X Related Base Price</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The related extended price is Quantity X Term X Related Base Price</inlineHelpText>
+        <label>Related Extended Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>RelatedListPrice__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The list price associated with the related product/service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The list price associated with the related product/service</inlineHelpText>
+        <label>Related List Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>RelatedNetPrice__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The net price associated with the related product/service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The net price associated with the related product/service</inlineHelpText>
+        <label>Related Net Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>RelatedProductId__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the related product</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the related product</inlineHelpText>
+        <label>Related Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipLabel>Price Breakups</relationshipLabel>
+        <relationshipName>PriceBreakups</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>RelatedQuantity__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The quantity associated with the related product/service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The quantity associated with the related product/service</inlineHelpText>
+        <label>Related Quantity</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RelatedSellingFrequency__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The selling frequency associated with the related product/service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The selling frequency associated with the related product/service</inlineHelpText>
+        <label>Related Selling Frequency</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Hourly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Daily</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Monthly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Quarterly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Half Yearly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Yearly</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>One Time</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>RelatedSellingTerm__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The selling term associated with the related product/service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The selling term associated with the related product/service</inlineHelpText>
+        <label>Related Selling Term</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RelatedStartDate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The start date associated with the related product/service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The start date associated with the related product/service</inlineHelpText>
+        <label>Related Start Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Sequence__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The breakup sequence</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The breakup sequence</inlineHelpText>
+        <label>Sequence</label>
+        <precision>5</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SubType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The user defined sub type</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The user defined sub type</inlineHelpText>
+        <label>SubType</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Default</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>TierBasePrice__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The unit price associated with the tier</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The unit price associated with the tier</inlineHelpText>
+        <label>Tier Unit Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>TierEndValue__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The tier end value</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The tier end value</inlineHelpText>
+        <label>Tier End Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TierExtendedPrice__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The tier extended price is Tier Quantity X Tier Base Price</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The tier extended price is Tier Quantity X Tier Base Price</inlineHelpText>
+        <label>Tier Extended Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>TierFlatPrice__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The flat price associated with the tier</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The flat price associated with the tier</inlineHelpText>
+        <label>Tier Flat Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>TierQuantity__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The quantity associated with the tier</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The quantity associated with the tier</inlineHelpText>
+        <label>Tier Quantity</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TierStartValue__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The tier start value</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The tier start value</inlineHelpText>
+        <label>Tier Start Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The user defined type</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The user defined type</inlineHelpText>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Default</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Price Breakup</label>
+    <nameField>
+        <displayFormat>PB-{00000000}</displayFormat>
+        <label>Breakup Id</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Price Breakups</pluralLabel>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Sequence__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>BreakupType__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>RelatedProductId__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>RelatedQuantity__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>RelatedChargeType__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>RelatedBasePrice__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>RelatedNetPrice__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>BasePrice__c</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Sequence__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>BreakupType__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>RelatedProductId__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>RelatedQuantity__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>RelatedChargeType__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>RelatedBasePrice__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>RelatedNetPrice__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>BasePrice__c</lookupPhoneDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Sequence__c</searchFilterFields>
+        <searchFilterFields>BreakupType__c</searchFilterFields>
+        <searchFilterFields>RelatedProductId__c</searchFilterFields>
+        <searchFilterFields>RelatedQuantity__c</searchFilterFields>
+        <searchFilterFields>RelatedChargeType__c</searchFilterFields>
+        <searchFilterFields>RelatedBasePrice__c</searchFilterFields>
+        <searchFilterFields>RelatedNetPrice__c</searchFilterFields>
+        <searchFilterFields>BasePrice__c</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+</CustomObject>

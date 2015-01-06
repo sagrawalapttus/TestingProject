@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Represents a special pricing rule associated with an agreement or an asset</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>AccountId__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the account associated with the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the account associated with the price rule</inlineHelpText>
+        <label>Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Agreement Price Rules</relationshipLabel>
+        <relationshipName>AgreementPriceRules</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ActivatedDate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The date the price rule was activated in the system</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date the price rule was activated in the system</inlineHelpText>
+        <label>Activated Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>AdjustmentAmount__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The price adjustment amount.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The price adjustment amount.</inlineHelpText>
+        <label>Adjustment Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AdjustmentType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The price adjustment type</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The price adjustment type</inlineHelpText>
+        <label>Adjustment Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>% Discount</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Discount Amount</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>% Markup</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Markup Amount</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Price Override</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Price Factor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>AllowRemoval__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicates whether the user is allowed to remove the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates whether the user is allowed to remove the price rule</inlineHelpText>
+        <label>Allow Removal</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>AncestorId__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the ancestor price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the ancestor price rule</inlineHelpText>
+        <label>Ancestor</label>
+        <referenceTo>AgreementPriceRule__c</referenceTo>
+        <relationshipLabel>Derived Price Rules</relationshipLabel>
+        <relationshipName>DerivedPriceRules</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>BundleProductId__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the bundle product associated with the option</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the bundle product associated with the option</inlineHelpText>
+        <label>Bundle Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipLabel>Agreement Price Rules (Bundle Product)</relationshipLabel>
+        <relationshipName>AgreementPriceRules2</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ChargeType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The charge type associated with the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The charge type associated with the price rule</inlineHelpText>
+        <label>Charge Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Standard Price</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>License Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Subscription Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Implementation Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Installation Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Maintenance Fee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>ConfigurationId__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the associated configuration</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the associated configuration</inlineHelpText>
+        <label>Configuration</label>
+        <referenceTo>ProductConfiguration__c</referenceTo>
+        <relationshipLabel>Agreement Price Rules</relationshipLabel>
+        <relationshipName>AgreementPriceRules</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ContractNumber__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The contract number associated with the price rule. The rule is associated with a conract number after activation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The contract number associated with the price rule. The rule is associated with a conract number after activation.</inlineHelpText>
+        <label>Contract Number</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Criteria__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The rule criteria specification</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The rule criteria specification</inlineHelpText>
+        <label>Criteria</label>
+        <length>4000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
+        <fullName>EffectiveDate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The rule effective date. The rule becomes effective on this date and time.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The rule effective date. The rule becomes effective on this date and time.</inlineHelpText>
+        <label>Effective Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>ExpirationDate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The rule expiration date. The rule becomes ineffective after this date and time.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The rule expiration date. The rule becomes ineffective after this date and time.</inlineHelpText>
+        <label>Expiration Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>IsModifiable__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicates whether the prce rule is modifiable</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates whether the prce rule is modifiable</inlineHelpText>
+        <label>Is Modifiable</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>PriceListId__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the price list associated with the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the price list associated with the price rule</inlineHelpText>
+        <label>Price List</label>
+        <referenceTo>PriceList__c</referenceTo>
+        <relationshipLabel>Agreement Price Rules</relationshipLabel>
+        <relationshipName>AgreementPriceRules</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>PriceListItemId__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the price list item associated with the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the price list item associated with the price rule</inlineHelpText>
+        <label>Price List Item</label>
+        <referenceTo>PriceListItem__c</referenceTo>
+        <relationshipLabel>Agreement Price Rules</relationshipLabel>
+        <relationshipName>AgreementPriceRules</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ProductCategory__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The product category associated with the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The product category associated with the price rule</inlineHelpText>
+        <label>Product Category</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ProductFamily__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The product family associated with the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The product family associated with the price rule</inlineHelpText>
+        <label>Product Family</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ProductGroupId__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the product group associated with the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the product group associated with the price rule</inlineHelpText>
+        <label>Product Group</label>
+        <referenceTo>ProductGroup__c</referenceTo>
+        <relationshipLabel>Agreement Price Rules</relationshipLabel>
+        <relationshipName>AgreementPriceRules</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ProductId__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the product associated with the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the product associated with the price rule</inlineHelpText>
+        <label>Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipLabel>Agreement Price Rules</relationshipLabel>
+        <relationshipName>AgreementPriceRules</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ProductOptionId__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>ID of the product option associated with the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the product option associated with the price rule</inlineHelpText>
+        <label>Product Option</label>
+        <referenceTo>ProductOptionComponent__c</referenceTo>
+        <relationshipLabel>Agreement Price Rules</relationshipLabel>
+        <relationshipName>AgreementPriceRules</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>RuleType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The rule type</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The rule type</inlineHelpText>
+        <label>Rule Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Contract</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Asset</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Sequence__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The rule evaluation sequence</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The rule evaluation sequence</inlineHelpText>
+        <label>Sequence</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The current status of the price rule</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The current status of the price rule</inlineHelpText>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>New</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Finalized</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Being Amended</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Superseded</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Activated</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Agreement Price Rule</label>
+    <nameField>
+        <label>Rule Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Agreement Price Rules</pluralLabel>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Sequence__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>RuleType__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ProductId__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ChargeType__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ProductFamily__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ProductCategory__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ProductGroupId__c</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Sequence__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>RuleType__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>ProductId__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>ChargeType__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>ProductFamily__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>ProductCategory__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>ProductGroupId__c</lookupPhoneDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Sequence__c</searchFilterFields>
+        <searchFilterFields>RuleType__c</searchFilterFields>
+        <searchFilterFields>ProductId__c</searchFilterFields>
+        <searchFilterFields>ChargeType__c</searchFilterFields>
+        <searchFilterFields>ProductFamily__c</searchFilterFields>
+        <searchFilterFields>ProductCategory__c</searchFilterFields>
+        <searchFilterFields>ProductGroupId__c</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

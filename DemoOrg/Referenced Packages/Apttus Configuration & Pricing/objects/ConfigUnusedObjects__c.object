@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Keeps list of unused objects to optimize SOQL</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>ObjectNames__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Comma separated list of CPQ object names that are not used</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Comma separated list of CPQ object names that are not used</inlineHelpText>
+        <label>Object Names</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <label>Config Unused Objects</label>
+</CustomObject>
